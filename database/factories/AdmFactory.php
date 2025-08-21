@@ -9,12 +9,12 @@ use Illuminate\Support\Str;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-class UserFactory extends Factory
+class AdmFactory extends Factory
 {
     /**
      * The current password being used by the factory.
      */
-    protected static ?string $password;
+    protected static ?string $adminPassword;
 
     /**
      * Define the model's default state.
@@ -27,13 +27,12 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$adminPassword ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'phone' => fake()->phoneNumber(),
             'birth_date'=> fake()->dateTimeBetween('-50 years', '-18 years'),
             'cpf'=>fake()->unique()->numerify('###.###.###-##'),
-            'type'=>'user',
-            'saldo'=>fake()->randomFloat(2, 0, 10000),
+            'type'=>'admin',
             'photo'=>null,
             'created_by'=>null
         ];

@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'birth_date',
+        'cpf',
+        'type',
+        'saldo',
+        'photo',
+        'created_by',
     ];
 
     /**
@@ -32,6 +39,26 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    public function address()
+    {
+        return $this->hasOne(Address::class);
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'buyer_id');
+    }
+    public function sales()
+    {
+        return $this->hasMany(Order::class, 'seller_id');
+    }
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    public function createdUsers()
+    {
+        return $this->hasMany(User::class, 'created_by');
+    }
 
     /**
      * Get the attributes that should be cast.
