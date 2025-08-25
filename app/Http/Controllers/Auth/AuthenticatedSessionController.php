@@ -28,7 +28,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        /*if($request->user()->type === 'admin')
+        {
+            return redirect()->intended(route('admin.index'));
+        }elseif($request->user()->type === 'user')
+        {
+            return redirect()->intended(route('dashboard', absolute: false));
+        }
+        else
+        {
+            return redirect('login')->with('error', 'Você não tem permissão para acessar esta área.');
+        }*/
+
+        return redirect()->intended(route('initialPage', absolute: false));
     }
 
     /**
@@ -41,6 +53,8 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+
 
         return redirect('/');
     }
