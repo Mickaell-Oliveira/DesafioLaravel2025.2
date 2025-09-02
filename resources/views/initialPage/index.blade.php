@@ -8,11 +8,23 @@
 
 @section('content')
     <form action="{{ route('products.index') }}" method="GET" class="mb-4">
-        <div class="input-group">
+        <div class="input-group mb-2">
             <input type="text" name="query" class="form-control" placeholder="Buscar produtos..." value="{{ $query ?? '' }}">
-            <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit">Buscar</button>
-            </span>
+            <button class="btn btn-primary" type="submit">Buscar</button>
+        </div>
+        <div class="mb-2">
+            <div class="btn-group" role="group">
+                @foreach($categories as $category)
+                    <a href="{{ route('products.index', array_merge(request()->except('page'), ['category' => $category->id])) }}"
+                       class="btn btn-outline-secondary {{ request('category') == $category->id ? 'active' : '' }}">
+                        {{ $category->name }}
+                    </a>
+                @endforeach
+                <a href="{{ route('products.index', request()->except(['category', 'page'])) }}"
+                   class="btn btn-outline-secondary {{ !request('category') ? 'active' : '' }}">
+                    Todas
+                </a>
+            </div>
         </div>
     </form>
     <div>

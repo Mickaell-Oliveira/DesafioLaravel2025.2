@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -18,10 +19,20 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = $request->input('query');
+        $categoryId = $request->input('category');
         $products = Product::when($query, function($q) use ($query) {
             $q->where('name', 'like', "%{$query}%");
-        })->paginate(10);
-        return view('initialPage.index', ['products' => $products, 'query' => $query]);
+        })
+        ->when($categoryId, function($q) use ($categoryId) {
+            $q->where('category_id', $categoryId);
+        })
+        ->paginate(10);
+        $categories = Category::all();
+        return view('initialPage.index', [
+            'products' => $products,
+            'query' => $query,
+            'categories' => $categories,
+        ]);
     }
 
     // Página de gerenciamento de produtos
@@ -58,20 +69,42 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
-        $product->update($request->all());
-        return redirect()->route('productsManagement.index');
+
+        $data = $request->all();
+
+        if($request->hasFile('photo'))
+        {
+            if($product->photo && Storage::disk('public')->exists($product->photo)) {
+                Storage::disk('public')->delete($product->photo);
+            }
+
+            $path = $request->file('photo')->store('products', 'public');
+            $data['photo'] = $path;
+        }
+
+
+        $product->update($data);
+        return redirect()->route('productsManagement.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
         $product->delete();
-        return redirect()->route('productsManagement.index');
+        Storage::disk('public')->delete($product->photo);
+        return redirect()->route('productsManagement.index')->with('success', 'Produto excluído com sucesso!');
     }
 
     public function store(Request $request)
     {
-        Product::create($request->all());
+        $data = $request->all();
+
+        if($request->hasFile('photo'))
+        {
+            $path = $request->file('photo')->store('products', 'public');
+            $data['photo'] = $path;
+        }
+        Product::create($data);
         return redirect()->route('productsManagement.index');
     }
 
