@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
+use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class ProductController extends Controller
 {
@@ -46,7 +47,22 @@ class ProductController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         $categories = Category::all();
-        return view('productsManagement.index', compact('products', 'query', 'categories'));
+
+        // Criação do gráfico
+        $chart_options = [
+            'chart_title'           => 'Produtos Cadastrados por Mês',
+            'model'                 => Product::class,
+            'chart_type'            => 'bar',
+            'report_type'           => 'group_by_date',
+            'group_by_field'        => 'created_at',
+            'group_by_period'       => 'month',
+            'chart_color'           => '0,122,255',
+            'filter_field'          => 'created_at',
+            'filter_days'           => 365,
+        ];
+        $chart = new LaravelChart($chart_options);
+
+        return view('productsManagement.index', compact('products', 'query', 'categories', 'chart'));
     }
 
     public function create()

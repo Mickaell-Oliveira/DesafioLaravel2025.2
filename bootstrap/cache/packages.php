@@ -46,6 +46,13 @@
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
+  'laraveldaily/laravel-charts' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'LaravelDaily\\LaravelCharts\\LaravelChartsServiceProvider',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 

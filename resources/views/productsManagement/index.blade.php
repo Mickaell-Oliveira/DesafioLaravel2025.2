@@ -4,7 +4,11 @@
 
 @section('content_header')
     <h1>Gerenciar Produtos</h1>
-    <button class="btn btn-success" data-toggle="modal" data-target="#modal-create">Novo Produto</button>
+    @auth
+        @if (auth()->user()->type === 'user')
+            <button class="btn btn-success" data-toggle="modal" data-target="#modal-create">Novo Produto</button>
+        @endif
+    @endauth
 @stop
 
 @section('content')
@@ -30,13 +34,19 @@
                             <td>{{ $product->quantity }}</td>
                             <td>
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-{{ $product->id }}">Visualizar</button>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{ $product->id }}">Editar</button>
-                                <!-- Modal Deletar -->
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
-                                </form>
+                                @auth
+                                    @if (auth()->user()->type === 'admin')
+                                    <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{ $product->id }}">Editar</button>
+                                    <!-- Modal Deletar -->
+                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                                        </form>
+                                    @endif
+                                @endauth
+
+
                             </td>
                         </tr>
                     @empty
@@ -217,4 +227,17 @@
             </div>
         </div>
     </div>
+    {{-- Gráfico de produtos cadastrados por mês --}}
+    @auth
+        @if(auth()->user()->type === 'admin')
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="mb-3">Produtos cadastrados por mês</h4>
+                    {!! $chart->renderHtml() !!}
+                </div>
+            </div>
+            {!! $chart->renderChartJsLibrary() !!}
+            {!! $chart->renderJs() !!}
+        @endif
+    @endauth
 @stop
