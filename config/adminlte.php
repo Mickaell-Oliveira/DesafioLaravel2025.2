@@ -216,7 +216,7 @@ return [
 
     'sidebar_mini' => 'lg',
     'sidebar_collapse' => true,
-    'sidebar_collapse_auto_size' => false,
+    'sidebar_collapse_auto_size' => true,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
@@ -300,27 +300,35 @@ return [
 
     'menu' => [
         // Sidebar items:
-        /*[
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],*/
-       /* [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],*/
+        ['header' => 'Funções Administrativas'],
         [
-            'text' => 'Gerenciamento de Produtos',
+            'text' => 'Gerenciar Produtos',
             'url' => '/productsManagement',
             'icon' => 'fas fa-fw fa-box',
-            //'label' => 4,
-            //'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+        [
+            'text' => 'Gerenciar Usuários',
+            'url' => '/usersManagement',
+            'icon' => 'fas fa-fw fa-tachometer-alt',
+            'can' => 'admin',
+        ],
+        [
+            'text' => 'Gerenciar Administradores',
+            'url' => '/admin',
+            'icon' => 'fas fa-fw fa-cog',
+            'can' => 'admin',
+        ],
+        ['header' => 'Gerenciamento de conta'],
         [
             'text' => 'Perfil',
-            'url' => 'admin/settings',
+            'url' => '/profile',
             'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'Página Inicial',
+            'url' => '/',
+            'icon' => 'fas fa-fw fa-home',
+            'topnav' => true,
         ],
     ],
 

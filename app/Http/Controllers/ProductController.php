@@ -51,7 +51,7 @@ class ProductController extends Controller
         // Criação do gráfico
         $chart_options = [
             'chart_title'           => 'Produtos Cadastrados por Mês',
-            'model'                 => Product::class,
+            'model'                 =>  Product::class,
             'chart_type'            => 'bar',
             'report_type'           => 'group_by_date',
             'group_by_field'        => 'created_at',

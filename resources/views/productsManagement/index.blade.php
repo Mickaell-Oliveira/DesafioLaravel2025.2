@@ -17,11 +17,12 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Ações</th>
+                        <th>ID</th>
                         <th>Nome</th>
                         <th>Categoria</th>
                         <th>Preço</th>
                         <th>Quantidade</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>

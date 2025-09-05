@@ -45,7 +45,7 @@ class User extends Authenticatable
     }
     public function products()
     {
-        return $this->hasMany(Product::class, 'buyer_id');
+        return $this->hasMany(Product::class, 'user_id');
     }
     public function sales()
     {
@@ -70,6 +70,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
         ];
     }
+    protected static function booted()
+{
+    static::deleting(function ($user) {
+
+        $user->address()?->delete();
+        $user->products()->delete();
+        $user->sales()->delete();
+        $user->createdUsers()->delete();
+    });
+}
+
 }
