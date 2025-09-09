@@ -1,16 +1,12 @@
 @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/cepAPI.js'])
-
 @extends('adminlte::page')
 
-@section('title', 'Gerenciar Usuários')
+@section('title', 'Gerenciar Administradores')
 
 @section('content_header')
-    <h1>Gerenciar Usuários</h1>
-    @auth
-        @if (auth()->user()->type === 'admin')
-            <button class="btn btn-success" data-toggle="modal" data-target="#modal-create">Novo Usuário</button>
-        @endif
-    @endauth
+    <h1>Gerenciar Administradores</h1>
+            <button class="btn btn-success" data-toggle="modal" data-target="#modal-create">Novo Administrador</button>
+
 @stop
 
 @section('content')
@@ -27,128 +23,118 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($users as $user)
+                    @forelse($admins as $admin)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->type }}</td>
+                            <td>{{ $admin->id }}</td>
+                            <td>{{ $admin->name }}</td>
+                            <td>{{ $admin->email }}</td>
+                            <td>{{ $admin->type }}</td>
                             <td>
                                 <!-- Botão Visualizar -->
-                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-view-{{ $user->id }}">Visualizar</button>
-
+                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-view-{{ $admin->id }}">Visualizar</button>
                                 @auth
-                                    @if (auth()->user()->type === 'admin')
-                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{ $user->id }}">Editar</button>
-                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{ $user->id }}">Excluir</button>
-                                        <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#modal-email-{{ $user->id }}">Enviar Email</button>
+                                    @if (auth()->user()->id === $admin->created_by)
+                                        <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{ $admin->id }}">Editar</button>
+                                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{ $admin->id }}">Excluir</button>
                                     @endif
                                 @endauth
                             </td>
                         </tr>
 
-                        <!-- Modal Visualizar Usuário -->
-                        <div class="modal fade" id="modal-view-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                        <!-- Modal Visualizar Administrador -->
+                        <div class="modal fade" id="modal-view-{{ $admin->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Visualizar Usuário</h5>
+                                        <h5 class="modal-title">Visualizar Administrador</h5>
                                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p><strong>ID:</strong> {{ $user->id }}</p>
-                                        <p><strong>Nome:</strong> {{ $user->name }}</p>
-                                        <p><strong>Email:</strong> {{ $user->email }}</p>
-                                        <p><strong>Telefone:</strong> {{ $user->phone }}</p>
-                                        <p><strong>Data de Nascimento:</strong> {{ $user->birth_date }}</p>
-                                        <p><strong>CPF:</strong> {{ $user->cpf }}</p>
-                                        <p><strong>Saldo:</strong> R$ {{ number_format($user->saldo, 2, ',', '.') }}</p>
-                                        <p><strong>Tipo:</strong> {{ $user->type }}</p>
-                                        <p><strong>Criado em:</strong> {{ $user->created_at }}</p>
-                                        <p><strong>Atualizado em:</strong> {{ $user->updated_at }}</p>
-                                        @if($user->photo)
+                                        <p><strong>ID:</strong> {{ $admin->id }}</p>
+                                        <p><strong>Nome:</strong> {{ $admin->name }}</p>
+                                        <p><strong>Email:</strong> {{ $admin->email }}</p>
+                                        <p><strong>Telefone:</strong> {{ $admin->phone }}</p>
+                                        <p><strong>Data de Nascimento:</strong> {{ $admin->birth_date }}</p>
+                                        <p><strong>CPF:</strong> {{ $admin->cpf }}</p>
+                                        <p><strong>Saldo:</strong> R$ {{ number_format($admin->saldo, 2, ',', '.') }}</p>
+                                        <p><strong>Tipo:</strong> {{ $admin->type }}</p>
+                                        <p><strong>Criado em:</strong> {{ $admin->created_at }}</p>
+                                        <p><strong>Atualizado em:</strong> {{ $admin->updated_at }}</p>
+                                        @if($admin->photo)
                                             <p><strong>Foto:</strong></p>
-                                            <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto do usuário" width="150">
+                                            <img src="{{ asset('storage/' . $admin->photo) }}" alt="Foto do administrador" width="150">
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Modal Editar Usuário -->
-                        <div class="modal fade" id="modal-edit-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                        <!-- Modal Editar Administrador -->
+                        <div class="modal fade modal-endereco" id="modal-edit-{{ $admin->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
-                                    <form action="{{ route('usersManagement.update', $user->id) }}" method="POST">
+                                    <form action="{{ route('adminManagement.update', $admin->id) }}" method="POST">
                                         @csrf
                                         @method('PATCH')
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Editar Usuário</h5>
+                                            <h5 class="modal-title">Editar Administrador</h5>
                                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                                         </div>
                                         <div class="modal-body">
 
                                             <div class="form-group">
                                                 <label>Nome</label>
-                                                <input type="text" class="form-control" name="name" required>
+                                                <input type="text" class="form-control" name="name" value="{{ $admin->name }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label>Email</label>
-                                                <input type="email" class="form-control" name="email" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Senha</label>
-                                                <input type="password" class="form-control" name="password" required autocomplete="new-password">
+                                                <input type="email" class="form-control" name="email" value="{{ $admin->email }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label>Telefone</label>
-                                                <input type="text" class="form-control" name="phone">
+                                                <input type="text" class="form-control" name="phone" value="{{ $admin->phone }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Data de Nascimento</label>
-                                                <input type="date" class="form-control" name="birth_date">
+                                                <input type="date" class="form-control" name="birth_date" value="{{ $admin->birth_date }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>CPF</label>
-                                                <input type="text" class="form-control" name="cpf">
+                                                <input type="text" class="form-control" name="cpf" value="{{ $admin->cpf }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Saldo</label>
-                                                <input type="number" step="0.01" class="form-control" name="saldo">
+                                                <input type="number" step="0.01" class="form-control" name="saldo" value="{{ $admin->saldo }}">
                                             </div>
                                             <hr>
                                             <h5>Endereço</h5>
                                             <div class="form-group">
                                                 <label>CEP</label>
-                                                <input type="text" class="form-control" name="cep">
+                                                <input type="text" class="form-control cep-input" name="cep" value="{{ $admin->address->cep ?? '' }}" id="cep-edit-{{ $admin->id }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Número</label>
-                                                <input type="text" class="form-control" name="numero">
+                                                <input type="text" class="form-control" name="numero" value="{{ $admin->address->numero ?? '' }}" id="numero-edit-{{ $admin->id }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Logradouro</label>
-                                                <input type="text" class="form-control" name="logradouro">
+                                                <input type="text" class="form-control logradouro-input" name="logradouro" value="{{ $admin->address->logradouro ?? '' }}" id="logradouro-edit-{{ $admin->id }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Bairro</label>
-                                                <input type="text" class="form-control" name="bairro">
+                                                <input type="text" class="form-control bairro-input" name="bairro" value="{{ $admin->address->bairro ?? '' }}" id="bairro-edit-{{ $admin->id }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Cidade</label>
-                                                <input type="text" class="form-control" name="cidade">
+                                                <input type="text" class="form-control cidade-input" name="cidade" value="{{ $admin->address->cidade ?? '' }}" id="cidade-edit-{{ $admin->id }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Estado</label>
-                                                <input type="text" class="form-control" name="estado">
+                                                <input type="text" class="form-control estado-input" name="estado" value="{{ $admin->address->estado ?? '' }}" id="estado-edit-{{ $admin->id }}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Complemento</label>
-                                                <input type="text" class="form-control" name="complemento">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Saldo</label>
-                                                <input type="number" step="0.01" class="form-control" name="saldo" value="{{ $user->saldo }}">
+                                                <input type="text" class="form-control complemento-input" name="complemento" value="{{ $admin->address->complemento ?? '' }}" id="complemento-edit-{{ $admin->id }}">
                                             </div>
 
                                         </div>
@@ -162,53 +148,24 @@
                         </div>
 
                         <!-- Modal Excluir Usuário -->
-                        <div class="modal fade" id="modal-delete-{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal fade" id="modal-delete-{{ $admin->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form action="{{ route('usersManagement.destroy', $user->id) }}" method="POST">
+                                    <form action="{{ route('adminManagement.destroy', $admin->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Excluir Usuário</h5>
+                                            <h5 class="modal-title">Excluir Administrador</h5>
                                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                                         </div>
 
                                         <div class="modal-body">
-                                            <p>Tem certeza que deseja excluir o usuário <strong>{{ $user->name }}</strong>?</p>
+                                            <p>Tem certeza que deseja excluir o administrador <strong>{{ $admin->name }}</strong>?</p>
                                         </div>
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                                             <button type="submit" class="btn btn-danger">Excluir</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Modal Enviar Email -->
-                        <div class="modal fade" id="modal-email-{{ $user->id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <form action="{{ route('usersManagement.sendEmail', $user->id) }}" method="POST">
-                                        @csrf
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Enviar Email para {{ $user->name }}</h5>
-                                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="subject">Assunto</label>
-                                                <input type="text" class="form-control" name="subject" id="subject" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="message">Mensagem</label>
-                                                <textarea class="form-control" name="message" id="message" rows="4" required></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                            <button type="submit" class="btn btn-primary">Enviar</button>
                                         </div>
                                     </form>
                                 </div>
@@ -224,20 +181,19 @@
             </table>
 
             <div class="mt-3">
-                {{ $users->links('pagination::bootstrap-5') }}
+                {{ $admins->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>
 
     <!-- Modal Criar Usuário -->
-    <div class="modal fade" id="modal-create" tabindex="-1" aria-hidden="true">
+    <div class="modal fade modal-endereco" id="modal-create" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('usersManagement.store') }}" method="POST" enctype="multipart/form-data">
-
+                <form action="{{ route('adminManagement.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Novo Usuário</h5>
+                        <h5 class="modal-title">Novo Administrador</h5>
                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body">
@@ -267,5 +223,5 @@
             </div>
         </div>
     </div>
-
 @stop
+

@@ -1,3 +1,5 @@
+@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/cepAPI.js'])
+
 @extends('adminlte::page')
 
 @section('title', 'Meu Perfil')
@@ -95,7 +97,7 @@
                         <label for="cep">CEP</label>
                         <input type="text" name="cep" id="cep"
                                value="{{ $user->address->cep ?? '' }}"
-                               class="form-control" disabled>
+                               class="form-control cep-input" disabled>
                     </div>
 
                     <div class="col-md-2 mb-3">
@@ -109,28 +111,28 @@
                         <label for="logradouro">Logradouro</label>
                         <input type="text" name="logradouro" id="logradouro"
                                value="{{ $user->address->logradouro ?? '' }}"
-                               class="form-control" disabled>
+                               class="form-control logradouro-input" disabled>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="bairro">Bairro</label>
                         <input type="text" name="bairro" id="bairro"
                                value="{{ $user->address->bairro ?? '' }}"
-                               class="form-control" disabled>
+                               class="form-control bairro-input" disabled>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="cidade">Cidade</label>
                         <input type="text" name="cidade" id="cidade"
                                value="{{ $user->address->cidade ?? '' }}"
-                               class="form-control" disabled>
+                               class="form-control cidade-input" disabled>
                     </div>
 
                     <div class="col-md-2 mb-3">
                         <label for="estado">Estado</label>
                         <input type="text" name="estado" id="estado"
                                value="{{ $user->address->estado ?? '' }}"
-                               class="form-control" disabled>
+                               class="form-control estado-input" disabled>
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -172,5 +174,6 @@
             reader.readAsDataURL(file);
         }
     });
+
 </script>
 @stop

@@ -36,7 +36,8 @@
                             <td>
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-{{ $product->id }}">Visualizar</button>
                                 @auth
-                                    @if (auth()->user()->type === 'admin')
+                                    @if (auth()->user()->type === 'admin' ||  auth()->user()->id === $product->user_id)
+                                        <!-- Botão Editar -->
                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{ $product->id }}">Editar</button>
                                     <!-- Modal Deletar -->
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
@@ -239,6 +240,19 @@
             </div>
             {!! $chart->renderChartJsLibrary() !!}
             {!! $chart->renderJs() !!}
+        @endif
+    @endauth
+    {{-- Gráfico de vendas por mês --}}
+    @auth
+        @if(auth()->user()->type === 'user')
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="mb-3">Vendas por mês</h4>
+                    {!! $SalesChart->renderHtml() !!}
+                </div>
+            </div>
+            {!! $SalesChart->renderChartJsLibrary() !!}
+            {!! $SalesChart->renderJs() !!}
         @endif
     @endauth
 @stop

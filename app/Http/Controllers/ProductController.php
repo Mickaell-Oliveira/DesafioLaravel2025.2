@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -62,7 +64,22 @@ class ProductController extends Controller
         ];
         $chart = new LaravelChart($chart_options);
 
-        return view('productsManagement.index', compact('products', 'query', 'categories', 'chart'));
+        $SalesChart_options =[
+            'chart_title'           => 'Vendas Realizadas por Mês',
+            'model'                 =>  Order::class,
+            'chart_type'            => 'line',
+            'report_type'           => 'group_by_date',
+            'group_by_field'        => 'created_at',
+            'group_by_period'       => 'month',
+            'chart_color'           => '0,122,255',
+            'filter_field'          => 'created_at',
+            'filter_days'           => 365,
+            'where_raw'             => 'seller_id = ' . Auth::id(),
+        ];
+
+        $SalesChart = new LaravelChart($SalesChart_options);
+
+        return view('productsManagement.index', compact('products', 'query', 'categories', 'chart', 'SalesChart'));
     }
 
     public function create()

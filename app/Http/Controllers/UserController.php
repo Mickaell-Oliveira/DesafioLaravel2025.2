@@ -6,12 +6,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::where('type', 'user')->paginate(10);
         return view('usersManagement.index', compact('users'));
     }
 
@@ -29,7 +30,7 @@ class UserController extends Controller
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect('/')->with('status', 'Sua conta e todos os dados relacionados foram excluídos.');
+        return redirect('/')->with('status', 'Sua conta e todos os dados foram excluídos.');
     }
     public function update(Request $request)
     {
@@ -47,6 +48,8 @@ class UserController extends Controller
         $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']);
         if ($user->address) {
             $user->address->update($addressData);
+        }else {
+            $user->address()->create($addressData);
         }
 
         $user->fill($validated);
@@ -73,9 +76,7 @@ class UserController extends Controller
             'birth_date' => 'nullable|date',
             'cpf' => 'nullable|string|max:14',
             'saldo' => 'nullable|numeric',
-            'type' => 'required|in:admin,user',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'created_by' => 'required|exists:users,id',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -83,10 +84,12 @@ class UserController extends Controller
         }
 
         $validated['password'] = Hash::make($validated['password']);
+        $validated['type'] = 'user';
+        $validated['created_by'] = Auth::user()->id;
 
         User::create($validated);
 
-        return redirect()->route('profilePage.index')->with('success', 'Usuário criado com sucesso!');
+        return redirect()->route('usersManagement.index')->with('success', 'Usuário criado com sucesso!');
     }
     public function adminUpdate(Request $request, User $user)
     {
@@ -111,4 +114,20 @@ class UserController extends Controller
 
         return redirect()->route('usersManagement.index')->with('success', 'Usuário excluído com sucesso!');
     }
+
+    public function sendEmail(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        Mail::raw($validated['message'], function ($mail) use ($user, $validated) {
+            $mail->to($user->email)
+                 ->subject($validated['subject']);
+        });
+
+        return redirect()->route('usersManagement.index')->with('success', 'Email enviado com sucesso para ' . $user->email);
+    }
+
 }

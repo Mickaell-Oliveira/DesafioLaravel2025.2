@@ -28,6 +28,7 @@ class User extends Authenticatable
         'saldo',
         'photo',
         'created_by',
+        'type',
     ];
 
     /**
