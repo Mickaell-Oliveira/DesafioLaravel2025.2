@@ -27,28 +27,50 @@
             </div>
         </div>
     </form>
+    @if(session('success'))
+        <div id="alert-message-success" class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <div>
         @forelse ($products as $product)
-            @auth
-                @if(auth()->user()->id !== $product->seller)
-                    <div type="button" onclick="window.location='{{ route('products.show', $product->id) }}'" class="mb-2 p-2 border-bottom cursor-pointer">
+            @if(auth()->user()->id !== $product->user_id)
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom">
+                    <a href="{{ route('products.show', $product->id) }}" class="text-dark text-decoration-none">
                         <strong>{{ $product->name }}</strong> <br>
-                        <span class="text-muted">R$ {{ $product->price }}</span>
-                        @auth
-                            @if(auth()->user()->type === 'user')
-                                <button type="button" class="btn btn-sm btn-success float-right">Comprar</button>
-                            @endif
-                        @endauth
-                    </div>
-                @endif
-            @endauth
-
+                        <span class="text-muted">R$ {{ number_format($product->price, 2, ',', '.') }}</span>
+                    </a>
+                    @if(auth()->user()->type === 'user')
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="fas fa-shopping-cart"></i> Adicionar
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            @endif
         @empty
-            <div class="text-danger">Nenhum produto encontrado.</div>
+            <div class="alert alert-info text-center">Nenhum produto encontrado.</div>
         @endforelse
     </div>
     <div class="mt-4">
-    {{ $products->onEachSide(1)->links('pagination::bootstrap-5') }}
+        {{ $products->links('pagination::bootstrap-5') }}
     </div>
-@stop
 
+<script>
+// Sumir com o alerta do carrinho
+setTimeout(() => {
+    let successAlert = document.getElementById('alert-message-success');
+    let errorAlert = document.getElementById('alert-message-error');
+    [successAlert, errorAlert].forEach(alert => {
+        if (alert) {
+            alert.style.transition = "opacity 0.5s ease";
+            alert.style.opacity = "0";
+            setTimeout(() => alert.remove(), 500);
+        }
+    });
+}, 1700);
+</script>
+@stop

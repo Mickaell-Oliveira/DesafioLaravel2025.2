@@ -4,6 +4,8 @@ use App\Http\Controllers\InitialPageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SalesHistoryController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ProductController::class, 'index'])->middleware(['auth', 'verified'])->name('initialPage.index');
@@ -67,10 +69,20 @@ Route::post('/productsManagement',[ProductController::class, 'store'])->name('pr
 Route::get('/productsManagement/{id}/edit',[ProductController::class, 'edit'])->name('products.edit');
 Route::put('/productsManagement/{id}',[ProductController::class, 'update'])->name('products.update');
 Route::delete('/productsManagement/{id}',[ProductController::class, 'destroy'])->name('products.destroy');
-
 //Rota para passar as categorias disponiveis para o modal editar
 Route::get('/productsManagement/categories',[ProductController::class, 'getCategories'])->name('products.categories');
 
+// Histórico de vendas
+Route::get('/salesHistory', [SalesHistoryController::class, 'salesHistory'])->middleware(['auth'])->name('salesHistory.index');
+// Gerar PDF do histórico de vendas
+Route::get('/salesHistory/pdf', [SalesHistoryController::class, 'pdf'])->middleware(['auth'])->name('salesHistory.pdf');
 
+// Rotas do carrinho
+Route::prefix('cart')->middleware('auth')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/adicionar/{product}', [CartController::class, 'add'])->name('add');
+    Route::patch('/atualizar/{productId}', [CartController::class, 'update'])->name('update');
+    Route::delete('/remover/{productId}', [CartController::class, 'remove'])->name('remove');
+});
 
 require __DIR__.'/auth.php';
