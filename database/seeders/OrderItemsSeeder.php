@@ -11,18 +11,10 @@ class OrderItemsSeeder extends Seeder
 {
     public function run()
     {
-        $orders = Order::all();
-
-        foreach ($orders as $order) {
-            $products = Product::inRandomOrder()->take(2)->get();
-            foreach ($products as $product) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'quantity' => rand(1, 5),
-                    'price' => $product->price,
-                ]);
-            }
-        }
+        Order::all()->each(function ($order) {
+            OrderItem::factory()->count(rand(1,5))->create([
+                'order_id' => $order->id
+            ]);
+        });
     }
 }

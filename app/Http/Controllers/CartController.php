@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -70,5 +73,50 @@ class CartController extends Controller
         }
 
         return redirect()->route('cart.index')->with('error', 'Item não encontrado no carrinho.');
+    }
+
+    public function checkout(Request $request)
+    {
+        $url = config('services.pagseguro.checkout_url');
+        $token = config('services.pagseguro.token');
+
+        $cartItems = json_decode($request->cart_items, true);
+
+        $items = array_values(array_map(fn($item)=>[
+            'name' => $item['name'],
+            'quantity' => $item['quantity'],
+            'unit_amount' => $item['price'] * 100
+        ], $cartItems));
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Content-type' => 'application/json'
+        ])->withoutVerifying()->post($url,[
+            'reference_id' => uniqid(),
+            'items' => $items,
+        ]);
+
+        if($response->successful())
+        {
+            $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']);
+
+            Order::create([
+                'id' => $response['reference_id'],
+                'status' => 1,
+                'buyer_id' => Auth::id(),
+                'total' => $total
+            ]);
+
+            $pay_link = data_get($response->json(), 'links.1.href');
+
+            return redirect()->away($pay_link);
+        }
+
+        return redirect('paymentError');
+    }
+
+    public function paymentError()
+    {
+        return view('cart.paymentError');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Email;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -123,9 +124,15 @@ class UserController extends Controller
         ]);
 
         Mail::raw($validated['message'], function ($mail) use ($user, $validated) {
-            $mail->to($user->email)
-                 ->subject($validated['subject']);
+            $mail->to($user->email)->subject($validated['subject']);
         });
+
+        Email::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $user->id,
+            'subject' => $validated['subject'],
+            'body' => $validated['message'],
+        ]);
 
         return redirect()->route('usersManagement.index')->with('success', 'Email enviado com sucesso para ' . $user->email);
     }

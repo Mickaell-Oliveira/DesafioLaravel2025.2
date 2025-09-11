@@ -64,7 +64,11 @@
                 <div class="mt-4 text-right">
                     <h3>Total: R$ {{ number_format($total, 2, ',', '.') }}</h3>
                     <a href="{{ url('/') }}" class="btn btn-secondary">Continuar Comprando</a>
-                    <a href="#" class="btn btn-success">Finalizar Compra</a>
+                    <form action="{{ route('cart.checkout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <input type="hidden" name="cart_items" value="{{ json_encode($cartItems) }}">
+                        <button type="submit" class="btn btn-success">Finalizar Compra</button>
+                    </form>
                 </div>
             @else
                 <div class="alert alert-info text-center">

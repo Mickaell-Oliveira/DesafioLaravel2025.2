@@ -89,6 +89,8 @@ Route::prefix('cart')->middleware('auth')->name('cart.')->group(function () {
     Route::post('/adicionar/{product}', [CartController::class, 'add'])->name('add');
     Route::patch('/atualizar/{productId}', [CartController::class, 'update'])->name('update');
     Route::delete('/remover/{productId}', [CartController::class, 'remove'])->name('remove');
+    Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::get('/paymentError', [CartController::class, 'paymentError'])->name('paymentError');
 });
 
 require __DIR__.'/auth.php';

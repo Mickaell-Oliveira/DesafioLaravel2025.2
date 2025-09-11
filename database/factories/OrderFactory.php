@@ -37,7 +37,7 @@ class OrderFactory extends Factory
 
         return [
             'buyer_id' => $buyerId,
-            'seller_id' => $sellerId,
+            'status' => 'ACTIVE',
             'total' => fake()->randomFloat(2, 20, 1000),
         ];
     }
