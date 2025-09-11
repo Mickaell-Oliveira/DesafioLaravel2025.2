@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Histórico de Vendas')
+@section('title', 'Histórico de Compras')
 
 @section('content_header')
-    <h1>Histórico de Vendas</h1>
+    <h1>Histórico de Compras</h1>
 @stop
 
 @section('content')
@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary me-2">Filtrar</button>
-                    <a href="{{ route('salesHistory.pdf', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-danger" target="_blank">Gerar PDF</a>
+                    <a href="{{ route('purchaseHistory.pdf', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-danger" target="_blank">Gerar PDF</a>
                 </div>
             </form>
 
@@ -29,38 +29,38 @@
                     <tr>
                         <th>Nome dos Produtos</th>
                         <th>Foto</th>
-                        <th>Data da Venda</th>
+                        <th>Data da Compra</th>
                         <th>Valor</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($sales as $sale)
+                    @forelse($purchases as $purchase)
                         <tr>
                             <td>
-                                @foreach($sale->items as $item)
+                                @foreach($purchase->items as $item)
                                     {{ $item->product->name }} <br>
                                 @endforeach
                             </td>
                             <td>
-                                @if($sale->items->first() && $sale->items->first()->product && $sale->items->first()->product->photo)
-                                    <img src="{{ asset('storage/' . $sale->items->first()->product->photo) }}" alt="Foto do produto" width="80">
+                                @if($purchase->items->first() && $purchase->items->first()->product && $purchase->items->first()->product->photo)
+                                    <img src="{{ asset('storage/' . $purchase->items->first()->product->photo) }}" alt="Foto do produto" width="80">
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
-                            <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                            <td>{{ $purchase->created_at ? $purchase->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            <td>R$ {{ number_format($purchase->total, 2, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center">Nenhuma venda encontrada.</td>
+                            <td colspan="4" class="text-center">Nenhuma compra encontrada.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
             <div class="mt-3">
-                {{ $sales->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+                {{ $purchases->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

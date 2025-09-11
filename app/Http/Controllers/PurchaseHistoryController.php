@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\App;
-use Illuminate\Http\Request;
 
-class SalesHistoryController extends Controller
+class PurchaseHistoryController extends Controller
 {
-    public function salesHistory(Request $request)
+    public function purchaseHistory(Request $request)
     {
-        $query = Order::where('seller_id', Auth::id())
+        $query = Order::where('buyer_id', Auth::id())
             ->with(['buyer', 'seller', 'items.product.category' , 'items.product']);
 
         if ($request->filled('start_date')) {
@@ -22,14 +21,14 @@ class SalesHistoryController extends Controller
             $query->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $sales = $query->orderBy('created_at', 'desc')->paginate(10);
+        $purchases = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('salesHistory.index', compact('sales'));
+        return view('purchaseHistory.index', compact('purchases'));
     }
 
-    public function pdf(Request $request)
+    public function purchasePdf(Request $request)
     {
-        $query = Order::where('seller_id', Auth::id())
+        $query = Order::where('buyer_id', Auth::id())
             ->with(['buyer', 'seller', 'items.product.category' , 'items.product']);
 
         if ($request->filled('start_date')) {
@@ -39,10 +38,9 @@ class SalesHistoryController extends Controller
             $query->whereDate('created_at', '<=', $request->end_date);
         }
 
-        $sales = $query->orderBy('created_at', 'desc')->get();
+        $purchases = $query->orderBy('created_at', 'desc')->get();
 
-        $pdf = Pdf::loadView('salesHistory.pdf', compact('sales'));
-        return $pdf->stream('salesHistory.pdf');
+        $pdf = Pdf::loadView('purchaseHistory.pdf', compact('purchases'));
+        return $pdf->stream('purchaseHistory.pdf');
     }
-
 }

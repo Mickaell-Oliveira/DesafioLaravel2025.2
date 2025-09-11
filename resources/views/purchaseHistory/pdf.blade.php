@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Relatório de Vendas</title>
+    <title>Relatório de Compras</title>
     <style>
         body { font-family: Arial, sans-serif; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -13,12 +13,12 @@
 </head>
 <body>
 
-    <h2>Relatório de Vendas</h2>
+    <h2>Relatório de Compras</h2>
     <p>Período: {{ request('start_date') ? date('d/m/Y', strtotime(request('start_date'))) : '--' }} a {{ request('end_date') ? date('d/m/Y', strtotime(request('end_date'))) : '--' }}</p>
     <table>
         <thead>
             <tr>
-                <th>Data da Venda</th>
+                <th>Data da Compra</th>
                 <th>Valor</th>
                 <th>Categorias dos produtos</th>
                 <th>Comprador</th>
@@ -26,21 +26,21 @@
             </tr>
         </thead>
         <tbody>
-        @forelse($sales as $sale)
+        @forelse($purchases as $purchase)
             <tr>
-                <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
-                <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                <td>{{ $purchase->created_at ? $purchase->created_at->format('d/m/Y H:i') : '-' }}</td>
+                <td>R$ {{ number_format($purchase->total, 2, ',', '.') }}</td>
                 <td>
-                    @foreach($sale->items as $item)
+                    @foreach($purchase->items as $item)
                         {{ $item->product->category->name ?? '-' }}<br>
                     @endforeach
                 </td>
-                <td>{{ $sale->buyer->name }}</td>
-                <td>{{ $sale->seller->name }}</td>
+                <td>{{ $purchase->buyer->name }}</td>
+                <td>{{ $purchase->seller->name }}</td>
             </tr>
         @empty
             <tr>
-                <td colspan="5">Nenhuma venda encontrada.</td>
+                <td colspan="5">Nenhuma compra encontrada.</td>
             </tr>
         @endforelse
         </tbody>

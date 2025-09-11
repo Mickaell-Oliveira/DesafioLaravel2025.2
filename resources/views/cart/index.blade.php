@@ -64,7 +64,7 @@
                 <div class="mt-4 text-right">
                     <h3>Total: R$ {{ number_format($total, 2, ',', '.') }}</h3>
                     <a href="{{ url('/') }}" class="btn btn-secondary">Continuar Comprando</a>
-                    <a href="" class="btn btn-success">Finalizar Compra</a>
+                    <a href="#" class="btn btn-success">Finalizar Compra</a>
                 </div>
             @else
                 <div class="alert alert-info text-center">

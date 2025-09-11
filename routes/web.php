@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SalesHistoryController;
+use App\Http\Controllers\PurchaseHistoryController;
 use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +77,11 @@ Route::get('/productsManagement/categories',[ProductController::class, 'getCateg
 Route::get('/salesHistory', [SalesHistoryController::class, 'salesHistory'])->middleware(['auth'])->name('salesHistory.index');
 // Gerar PDF do histórico de vendas
 Route::get('/salesHistory/pdf', [SalesHistoryController::class, 'pdf'])->middleware(['auth'])->name('salesHistory.pdf');
+
+// Histórico de compras
+Route::get('/purchaseHistory', [PurchaseHistoryController::class, 'purchaseHistory'])->middleware(['auth'])->name('purchaseHistory.index');
+// Gerar PDF do histórico de compras
+Route::get('/purchaseHistory/pdf', [PurchaseHistoryController::class, 'purchasePdf'])->middleware(['auth'])->name('purchaseHistory.pdf');
 
 // Rotas do carrinho
 Route::prefix('cart')->middleware('auth')->name('cart.')->group(function () {
