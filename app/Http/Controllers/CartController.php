@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
@@ -100,15 +101,22 @@ class CartController extends Controller
         {
             $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']);
 
-            Order::create([
+            $order = Order::create([
                 'id' => $response['reference_id'],
                 'status' => 1,
                 'buyer_id' => Auth::id(),
                 'total' => $total
             ]);
 
+            Transaction::create([
+                'user_id' => Auth::id(),
+                'order_id' => $order->id,
+                'amount' => $total
+            ]);
+
             $pay_link = data_get($response->json(), 'links.1.href');
 
+            session()->forget('cart');
             return redirect()->away($pay_link);
         }
 
