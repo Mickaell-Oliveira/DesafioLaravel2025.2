@@ -25,9 +25,10 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
-            'phone' => 'nullable|string|max:20',
-            'birth_date' => 'nullable|date',
-            'cpf' => 'nullable|string|max:20|unique:users,cpf',
+            'password' => 'required|string|min:8',
+            'phone' => 'required|string|max:20',
+            'birth_date' => 'required|date',
+            'cpf' => 'required|string|max:20|unique:users,cpf',
             'photo' => 'nullable|image|max:2048',
         ]);
 

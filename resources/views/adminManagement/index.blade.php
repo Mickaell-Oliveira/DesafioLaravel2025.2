@@ -56,7 +56,6 @@
                                         <p><strong>Telefone:</strong> {{ $admin->phone }}</p>
                                         <p><strong>Data de Nascimento:</strong> {{ $admin->birth_date }}</p>
                                         <p><strong>CPF:</strong> {{ $admin->cpf }}</p>
-                                        <p><strong>Saldo:</strong> R$ {{ number_format($admin->saldo, 2, ',', '.') }}</p>
                                         <p><strong>Tipo:</strong> {{ $admin->type }}</p>
                                         <p><strong>Criado em:</strong> {{ $admin->created_at }}</p>
                                         <p><strong>Atualizado em:</strong> {{ $admin->updated_at }}</p>
@@ -101,10 +100,6 @@
                                             <div class="form-group">
                                                 <label>CPF</label>
                                                 <input type="text" class="form-control" name="cpf" value="{{ $admin->cpf }}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Saldo</label>
-                                                <input type="number" step="0.01" class="form-control" name="saldo" value="{{ $admin->saldo }}">
                                             </div>
                                             <hr>
                                             <h5>Endereço</h5>
@@ -186,7 +181,7 @@
         </div>
     </div>
 
-    <!-- Modal Criar Usuário -->
+    <!-- Modal Criar administrador -->
     <div class="modal fade modal-endereco" id="modal-create" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -203,7 +198,6 @@
                         <div class="form-group"><label>Telefone</label><input type="text" class="form-control" name="phone"></div>
                         <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control" name="birth_date"></div>
                         <div class="form-group"><label>CPF</label><input type="text" class="form-control" name="cpf"></div>
-                        <div class="form-group"><label>Saldo</label><input type="number" step="0.01" class="form-control" name="saldo"></div>
                         <hr>
                         <h5>Endereço</h5>
                         <div class="form-group"><label>CEP</label><input type="text" class="form-control cep-input" name="cep" id="cep-create"></div>

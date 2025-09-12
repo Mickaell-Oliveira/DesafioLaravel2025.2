@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
@@ -113,6 +115,24 @@ class CartController extends Controller
                 'order_id' => $order->id,
                 'amount' => $total
             ]);
+
+        foreach ($cartItems as $productId => $item) {
+            $product = Product::find($productId);
+            $seller = User::find($product->user_id);
+
+            $paymentAmount = $item['price'] * $item['quantity'];
+
+            $seller->saldo += $paymentAmount;
+            $seller->save();
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $productId,
+                'seller_id' => $product->user_id,
+                'quantity' => $item['quantity'],
+                'price' => $item['price']
+            ]);
+        }
 
             $pay_link = data_get($response->json(), 'links.1.href');
 

@@ -242,17 +242,4 @@
             {!! $chart->renderJs() !!}
         @endif
     @endauth
-    {{-- Gráfico de vendas por mês --}}
-    @auth
-        @if(auth()->user()->type === 'user')
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h4 class="mb-3">Vendas por mês</h4>
-                    {!! $SalesChart->renderHtml() !!}
-                </div>
-            </div>
-            {!! $SalesChart->renderChartJsLibrary() !!}
-            {!! $SalesChart->renderJs() !!}
-        @endif
-    @endauth
 @stop

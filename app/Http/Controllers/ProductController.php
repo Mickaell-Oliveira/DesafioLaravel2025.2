@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Storage;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 use Illuminate\Support\Facades\Auth;
+
 
 class ProductController extends Controller
 {
@@ -64,22 +65,7 @@ class ProductController extends Controller
         ];
         $chart = new LaravelChart($chart_options);
 
-        $SalesChart_options =[
-            'chart_title'           => 'Vendas Realizadas por Mês',
-            'model'                 =>  Order::class,
-            'chart_type'            => 'line',
-            'report_type'           => 'group_by_date',
-            'group_by_field'        => 'created_at',
-            'group_by_period'       => 'month',
-            'chart_color'           => '0,122,255',
-            'filter_field'          => 'created_at',
-            'filter_days'           => 365,
-            'where_raw'             => 'seller_id = ' . Auth::id(),
-        ];
-
-        $SalesChart = new LaravelChart($SalesChart_options);
-
-        return view('productsManagement.index', compact('products', 'query', 'categories', 'chart', 'SalesChart'));
+        return view('productsManagement.index', compact('products', 'query', 'categories', 'chart'));
     }
 
     public function create()
@@ -120,13 +106,16 @@ class ProductController extends Controller
         return redirect()->route('productsManagement.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
+public function destroy($id)
+{
+    $product = Product::findOrFail($id);
+    if ($product->photo && Storage::disk('public')->exists($product->photo)) {
         Storage::disk('public')->delete($product->photo);
-        return redirect()->route('productsManagement.index')->with('success', 'Produto excluído com sucesso!');
     }
+    $product->delete();
+
+    return redirect()->route('productsManagement.index')->with('success', 'Produto excluído com sucesso!');
+}
 
     public function store(Request $request)
     {

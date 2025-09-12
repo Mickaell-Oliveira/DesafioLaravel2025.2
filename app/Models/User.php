@@ -50,7 +50,7 @@ class User extends Authenticatable
     }
     public function sales()
     {
-        return $this->hasMany(Order::class, 'seller_id');
+        return $this->hasMany(OrderItem::class, 'seller_id');
     }
     public function creator()
     {
