@@ -12,7 +12,7 @@ class PurchaseHistoryController extends Controller
     public function purchaseHistory(Request $request)
     {
         $query = Order::where('buyer_id', Auth::id())
-            ->with(['buyer', 'seller', 'items.product.category' , 'items.product']);
+            ->with(['buyer', 'items.seller', 'items.product.category' , 'items.product']);
 
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);
@@ -29,7 +29,7 @@ class PurchaseHistoryController extends Controller
     public function purchasePdf(Request $request)
     {
         $query = Order::where('buyer_id', Auth::id())
-            ->with(['buyer', 'seller', 'items.product.category' , 'items.product']);
+            ->with(['buyer', 'items.seller', 'items.product.category' , 'items.product']);
 
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);

@@ -20,24 +20,22 @@
             <tr>
                 <th>Data da Compra</th>
                 <th>Valor</th>
-                <th>Categorias dos produtos</th>
+                <th>Categoria do Produto</th>
                 <th>Comprador</th>
                 <th>Vendedor</th>
             </tr>
         </thead>
         <tbody>
         @forelse($purchases as $purchase)
-            <tr>
-                <td>{{ $purchase->created_at ? $purchase->created_at->format('d/m/Y H:i') : '-' }}</td>
-                <td>R$ {{ number_format($purchase->total, 2, ',', '.') }}</td>
-                <td>
-                    @foreach($purchase->items as $item)
-                        {{ $item->product->category->name ?? '-' }}<br>
-                    @endforeach
-                </td>
-                <td>{{ $purchase->buyer->name }}</td>
-                <td>{{ $purchase->seller->name }}</td>
-            </tr>
+            @foreach($purchase->items as $item)
+                <tr>
+                    <td>{{ $purchase->created_at ? $purchase->created_at->format('d/m/Y H:i') : '-' }}</td>
+                    <td>R$ {{ number_format($item->price * $item->quantity, 2, ',', '.') }}</td>
+                    <td>{{ $item->product->category->name ?? '-' }}</td>
+                    <td>{{ $purchase->buyer->name ?? '-' }}</td>
+                    <td>{{ $item->seller->name ?? '-' }}</td>
+                </tr>
+            @endforeach
         @empty
             <tr>
                 <td colspan="5">Nenhuma compra encontrada.</td>
