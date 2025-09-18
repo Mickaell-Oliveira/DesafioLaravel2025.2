@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('type', 'user')->paginate(10);
+        $users = User::where('type', 'user')->orderBy('created_at', 'desc')->paginate(10);
         return view('usersManagement.index', compact('users'));
     }
 
@@ -40,10 +40,17 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'birth_date' => 'nullable|date',
-            'cpf' => 'nullable|string|max:20|unique:users,cpf,' . $user->id,
-            'photo' => 'nullable|image|max:2048',
+            'phone' => 'required|string|max:20',
+            'birth_date' => 'required|date',
+            'cpf' => 'required|string|max:20|unique:users,cpf,' . $user->id,
+            'photo' => 'nullable|image|max:2048|mimes:jpg,jpeg,png',
+            'cep' => 'required|string|max:10',
+            'logradouro' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:100',
+            'cidade' => 'required|string|max:100',
+            'estado' => 'required|string|max:100',
+            'complemento' => 'required|string|max:255',
         ]);
 
         $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']);
@@ -73,12 +80,23 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'phone' => 'nullable|string|max:20',
-            'birth_date' => 'nullable|date',
-            'cpf' => 'nullable|string|max:14',
-            'saldo' => 'nullable|numeric',
+            'phone' => 'required|string|max:20',
+            'birth_date' => 'required|date',
+            'cpf' => 'required|string|max:14|unique:users,cpf',
+            'saldo' => 'required|numeric',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'cep' => 'required|string|max:10',
+            'logradouro' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:100',
+            'cidade' => 'required|string|max:100',
+            'estado' => 'required|string|max:100',
+            'complemento' => 'required|string|max:255',
         ]);
+
+        $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']);
+
+
 
         if ($request->hasFile('photo')) {
             $validated['photo'] = $request->file('photo')->store('users', 'public');
@@ -88,25 +106,52 @@ class UserController extends Controller
         $validated['type'] = 'user';
         $validated['created_by'] = Auth::user()->id;
 
-        User::create($validated);
+        $user = User::create($validated);
+
+        $user->address()->create($addressData);
 
         return redirect()->route('usersManagement.index')->with('success', 'Usuário criado com sucesso!');
     }
+
     public function adminUpdate(Request $request, User $user)
     {
-       $validated = $request->validate([
-           'name' => 'required|string|max:255',
-           'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-           'phone' => 'nullable|string|max:20',
-           'birth_date' => 'nullable|date',
-           'cpf' => 'nullable|string|max:20|unique:users,cpf,' . $user->id,
-           'saldo' => 'nullable|numeric',
-           'type' => 'required|in:admin,user',
-       ]);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'birth_date' => 'nullable|date',
+            'cpf' => 'nullable|string|max:20|unique:users,cpf,' . $user->id,
+            'saldo' => 'nullable|numeric',
+            'cep' => 'nullable|string|max:10',
+            'logradouro' => 'nullable|string|max:255',
+            'numero' => 'nullable|string|max:10',
+            'bairro' => 'nullable|string|max:100',
+            'cidade' => 'nullable|string|max:100',
+            'estado' => 'nullable|string|max:100',
+            'complemento' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-       $user->update($validated);
+        $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']);
 
-       return redirect()->route('usersManagement.index')->with('success', 'Usuário atualizado com sucesso!');
+        if ($user->address) {
+            $user->address->update($addressData);
+        } else {
+            $user->address()->create($addressData);
+        }
+
+        if ($request->hasFile('photo')) {
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $path = $request->file('photo')->store('users', 'public');
+            $validated['photo'] = $path;
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('usersManagement.index')->with('success', 'Usuário atualizado com sucesso!');
     }
 
     public function adminDestroy(User $user)

@@ -14,13 +14,12 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $admins = User::where('type', 'admin')->paginate(10);
+        $admins = User::where('type', 'admin')->orderBy('created_at', 'desc')->paginate(10);
         return view('adminManagement.index', compact('admins'));
     }
 
     public function adminStore(Request $request)
     {
-        $admin= User::find(Auth::id());
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -29,30 +28,31 @@ class AdminController extends Controller
             'phone' => 'required|string|max:20',
             'birth_date' => 'required|date',
             'cpf' => 'required|string|max:20|unique:users,cpf',
-            'photo' => 'nullable|image|max:2048',
+            'cep' => 'required|string|max:20',
+            'logradouro' => 'required|string|max:255',
+            'numero' => 'required|string|max:20',
+            'bairro' => 'required|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'estado' => 'required|string|max:255',
+            'complemento' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048|mimes:jpeg,png,jpg',
         ]);
 
-        $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']);
-        if ($admin->address) {
-            $admin->address->update($addressData);
-        }else {
-            $admin->address()->create($addressData);
-        }
+        $userData = Arr::except($validated, ['cep', 'numero', 'logradouro', 'bairro', 'cidade', 'estado', 'complemento']);
+        $addressData = Arr::only($validated, ['cep', 'numero', 'logradouro', 'bairro', 'cidade', 'estado', 'complemento']);
 
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('admins', 'public');
-            $validated['photo'] = $path;
+            $userData['photo'] = $path;
         }
 
-        $validated['password'] = Hash::make($validated['password']);
-        $validated['created_by'] =  Auth::user()->id;
-        $validated['type'] = 'admin';
+        $userData['password'] = Hash::make($validated['password']);
+        $userData['created_by'] = Auth::id();
+        $userData['type'] = 'admin';
 
-        $user = User::create(Arr::except($validated, ['cep','numero','logradouro','bairro','cidade','estado','complemento']));
+        $user = User::create($userData);
 
-        $addressFields = ['cep','numero','logradouro','bairro','cidade','estado','complemento'];
-        $addressData = $request->only($addressFields);
-        if (collect($addressData)->filter()->isNotEmpty()) {
+        if (count(array_filter($addressData)) > 0) {
             $user->address()->create($addressData);
         }
 
@@ -61,15 +61,20 @@ class AdminController extends Controller
 
     public function adminUpdate(Request $request, User $admin)
     {
-        $admin= User::find(Auth::id());
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'phone' => 'nullable|string|max:20',
-            'birth_date' => 'nullable|date',
-            'cpf' => 'nullable|string|max:20|unique:users,cpf',
-            'photo' => 'nullable|image|max:2048',
+            'email' => 'required|email|max:255|unique:users,email,' . $admin->id,
+            'phone' => 'required|string|max:20',
+            'birth_date' => 'required|date',
+            'cpf' => 'required|string|max:20|unique:users,cpf,' . $admin->id,
+            'cep' => 'required|string|max:20',
+            'logradouro' => 'required|string|max:255',
+            'numero' => 'required|string|max:20',
+            'bairro' => 'required|string|max:255',
+            'cidade' => 'required|string|max:255',
+            'estado' => 'required|string|max:255',
+            'complemento' => 'required|string|max:255',
+            'photo' => 'nullable|image|max:2048|mimes:jpeg,png,jpg',
         ]);
 
         $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']);
