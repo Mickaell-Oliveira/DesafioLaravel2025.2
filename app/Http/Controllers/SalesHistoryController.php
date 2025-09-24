@@ -15,7 +15,15 @@ class SalesHistoryController extends Controller
     {
         $query = Order::whereHas('items.product', function ($subQuery) {
             $subQuery->where('seller_id', Auth::id());
-        })->with(['buyer', 'seller', 'items.product.category' , 'items.product']);
+        })->with([
+            'buyer',
+            'seller',
+            'items' => function ($q) {
+                $q->whereHas('product', function ($subQuery) {
+                    $subQuery->where('seller_id', Auth::id());
+                })->with('product.category', 'product');
+            }
+        ]);
 
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);
@@ -26,7 +34,7 @@ class SalesHistoryController extends Controller
 
         $sales = $query->orderBy('created_at', 'desc')->paginate(10);
 
-                $SalesChart_options =[
+        $SalesChart_options =[
             'chart_title'           => 'Vendas Realizadas no Mês',
             'model'                 => OrderItem::class,
             'chart_type'            => 'line',
@@ -41,15 +49,24 @@ class SalesHistoryController extends Controller
 
         $SalesChart = new LaravelChart($SalesChart_options);
 
-        return view('salesHistory.index', compact('sales', 'SalesChart'));
+        $adminSales= Order::with(['buyer', 'seller', 'items.product.category' , 'items.product', 'items.seller'])->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('salesHistory.index', compact('sales', 'SalesChart', 'adminSales'));
     }
 
     public function pdf(Request $request)
     {
         $query = Order::whereHas('items.product', function ($subQuery) {
             $subQuery->where('seller_id', Auth::id());
-        })->with(['buyer', 'seller', 'items.product.category' , 'items.product']);
-
+        })->with([
+            'buyer',
+            'seller',
+            'items' => function ($q) {
+                $q->whereHas('product', function ($subQuery) {
+                    $subQuery->where('seller_id', Auth::id());
+                })->with('product.category', 'product');
+            }
+        ]);
 
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);

@@ -79,12 +79,12 @@ Route::get('/salesHistory', [SalesHistoryController::class, 'salesHistory'])->mi
 Route::get('/salesHistory/pdf', [SalesHistoryController::class, 'pdf'])->middleware(['auth'])->name('salesHistory.pdf');
 
 // Histórico de compras
-Route::get('/purchaseHistory', [PurchaseHistoryController::class, 'purchaseHistory'])->middleware(['auth'])->name('purchaseHistory.index');
+Route::get('/purchaseHistory', [PurchaseHistoryController::class, 'purchaseHistory'])->middleware(['auth' , 'user'])->name('purchaseHistory.index');
 // Gerar PDF do histórico de compras
-Route::get('/purchaseHistory/pdf', [PurchaseHistoryController::class, 'purchasePdf'])->middleware(['auth'])->name('purchaseHistory.pdf');
+Route::get('/purchaseHistory/pdf', [PurchaseHistoryController::class, 'purchasePdf'])->middleware(['auth' , 'user'])->name('purchaseHistory.pdf');
 
 // Rotas do carrinho
-Route::prefix('cart')->middleware('auth')->name('cart.')->group(function () {
+Route::prefix('cart')->middleware(['auth', 'user'])->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/adicionar/{product}', [CartController::class, 'add'])->name('add');
     Route::patch('/atualizar/{productId}', [CartController::class, 'update'])->name('update');

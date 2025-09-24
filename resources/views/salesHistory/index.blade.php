@@ -33,20 +33,24 @@
                         <th>Valor</th>
                     </tr>
                 </thead>
+                @if (auth()->user()->type === 'admin')
                 <tbody>
-                    @forelse($sales as $sale)
+                    @forelse($adminSales as $sale)
                         <tr>
                             <td>
                                 @foreach($sale->items as $item)
-                                    {{ $item->product->name }} <br>
+                                    {{ $item->product->name }}<br>
                                 @endforeach
                             </td>
                             <td>
-                                @if($sale->items->first() && $sale->items->first()->product && $sale->items->first()->product->photo)
-                                    <img src="{{ asset('storage/' . $sale->items->first()->product->photo) }}" alt="Foto do produto" width="80">
-                                @else
-                                    -
-                                @endif
+                                @foreach($sale->items as $item)
+                                    @if($item->product && $item->product->photo)
+                                        <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
+                                    @else
+                                        -
+                                    @endif
+                                    <br>
+                                @endforeach
                             </td>
                             <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
                             <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
@@ -57,11 +61,51 @@
                         </tr>
                     @endforelse
                 </tbody>
-            </table>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            {{ $adminSales->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+                        </td>
+                    </tr>
+                </tfoot>
 
-            <div class="mt-3">
-                {{ $sales->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
-            </div>
+                @else
+                <tbody>
+                    @forelse($sales as $sale)
+                        <tr>
+                            <td>
+                                @foreach($sale->items as $item)
+                                    {{ $item->product->name }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach($sale->items as $item)
+                                    @if($item->product && $item->product->photo)
+                                        <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
+                                    @else
+                                        -
+                                    @endif
+                                    <br>
+                                @endforeach
+                            </td>
+                            <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">Nenhuma venda encontrada.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            {{ $sales->appends(request()->except('page'))->links('pagination::bootstrap-5') }}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            @endif
         </div>
     </div>
 

@@ -36,7 +36,7 @@
                     @endforeach
                 </td>
                 <td>{{ $sale->buyer->name }}</td>
-                <td>{{ $sale->seller->name }}</td>
+                <td>{{ auth()->user()->name }}</td>
             </tr>
         @empty
             <tr>
