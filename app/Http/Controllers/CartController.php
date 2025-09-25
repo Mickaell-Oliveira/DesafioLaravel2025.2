@@ -47,6 +47,9 @@ class CartController extends Controller
             ];
         }
 
+        $product->quantity -= $quantity;
+        $product->save();
+        
         session()->put('cart', $cart);
 
         return redirect()->back()->with('success', 'Produto adicionado ao carrinho!');

@@ -38,16 +38,20 @@
                 <div class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom">
                     <a href="{{ route('products.show', $product->id) }}" class="text-dark text-decoration-none">
                         <strong>{{ $product->name }}</strong> <br>
-                        <span class="text-muted">R$ {{ number_format($product->price, 2, ',', '.') }}</span>
+                        <span class="text-muted">R$ {{ formatPrice($product->price) }}</span>
                     </a>
                     @if(auth()->user()->type === 'user')
-                        <form action="{{ route('cart.add', $product->id) }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="btn btn-sm btn-success">
-                                <i class="fas fa-shopping-cart"></i> Adicionar
-                            </button>
-                        </form>
+                        @if (verifyStock($product->id, 1))
+                            <form action="{{ route('cart.add', $product->id) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    <i class="fas fa-shopping-cart"></i> Adicionar
+                                </button>
+                            </form>
+                        @else
+                            <span class="text-danger">Fora de estoque</span>
+                        @endif
                     @endif
                 </div>
             @endif

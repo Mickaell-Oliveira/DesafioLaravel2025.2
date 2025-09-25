@@ -39,7 +39,7 @@
                                     <img src="{{ asset('storage/' . $item['photo']) }}" width="80" alt="{{ $item['name'] }}">
                                 </td>
                                 <td>{{ $item['name'] }}</td>
-                                <td>R$ {{ number_format($item['price'], 2, ',', '.') }}</td>
+                                <td>R$ {{ formatPrice($item['price']) }}</td>
                                 <td>
                                     <form action="{{ route('cart.update', $id) }}" method="POST" class="d-flex">
                                         @csrf
@@ -48,7 +48,7 @@
                                         <button type="submit" class="btn btn-sm btn-primary ms-2" title="Atualizar"><i class="fa fa-sync"></i></button>
                                     </form>
                                 </td>
-                                <td>R$ {{ number_format($item['price'] * $item['quantity'], 2, ',', '.') }}</td>
+                                <td>R$ {{ formatPrice($item['price'] * $item['quantity']) }}</td>
                                 <td>
                                     <form action="{{ route('cart.remove', $id) }}" method="POST">
                                         @csrf
@@ -62,7 +62,7 @@
                 </table>
 
                 <div class="mt-4 text-right">
-                    <h3>Total: R$ {{ number_format($total, 2, ',', '.') }}</h3>
+                    <h3>Total: R$ {{ formatPrice(cartTotal($cartItems)) }}</h3>
                     <a href="{{ url('/') }}" class="btn btn-secondary">Continuar Comprando</a>
                     <form action="{{ route('cart.checkout') }}" method="POST" class="d-inline">
                         @csrf

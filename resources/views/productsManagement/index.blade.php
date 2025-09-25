@@ -31,7 +31,7 @@
                             <td>{{ $product->id }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category->name ?? '-' }}</td>
-                            <td>R$ {{ $product->price }}</td>
+                            <td>R$ {{ formatPrice($product->price) }}</td>
                             <td>{{ $product->quantity }}</td>
                             <td>
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-{{ $product->id }}">Visualizar</button>
@@ -72,7 +72,7 @@
                         <div class="modal-body">
                             <img src="{{ asset('storage/' . $product->photo) }}" alt="Product Image" class="img-fluid mb-3">
                             <p><strong>Categoria:</strong> {{ $product->category->name }}</p>
-                            <p><strong>Preço:</strong> R$ {{ $product->price }}</p>
+                            <p><strong>Preço:</strong> R$ {{ formatPrice($product->price) }}</p>
                             <p><strong>Quantidade:</strong> {{ $product->quantity }}</p>
                             <p><strong>Descrição:</strong> {{ $product->description }}</p>
                             <p><strong>Criado por:</strong> {{ $product->seller->name }}</p>
@@ -112,19 +112,7 @@
                                         <label for="photo-{{ $product->id }}" class="btn btn-primary btn-sm mt-2">Escolher nova foto</label>
                                     </div>
                                 </div>
-                                <script>
-                                function previewImage(event, id) {
-                                    const input = event.target;
-                                    const preview = document.getElementById('preview-photo-' + id);
-                                    if (input.files && input.files[0]) {
-                                        const reader = new FileReader();
-                                        reader.onload = function(e) {
-                                            preview.src = e.target.result;
-                                        }
-                                        reader.readAsDataURL(input.files[0]);
-                                    }
-                                }
-                                </script>
+
                                 <div class="form-group">
                                     <label for="category-{{ $product->id }}">Categoria</label>
                                     <select class="form-control" id="category-{{ $product->id }}" name="category_id" required>
@@ -242,4 +230,20 @@
             {!! $chart->renderJs() !!}
         @endif
     @endauth
+@stop
+
+@section('js')
+<script>
+function previewImage(event, id) {
+    const input = event.target;
+    const preview = document.getElementById('preview-photo-' + id);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 @stop

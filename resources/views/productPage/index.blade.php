@@ -21,23 +21,25 @@
         <div class="card-body">
             <h3 class="card-title">{{ $product->name }}</h3>
             <p class="card-text">{{ $product->description }}</p>
-            <p class="card-text"><strong>Preço:</strong> R$ {{ number_format($product->price, 2, ',', '.') }}</p>
-            <p class="card-text"><strong>Quantidade disponível:</strong> {{ $product->quantity }}</p>
+            <p class="card-text"><strong>Preço:</strong> R$ {{ formatPrice($product->price) }}</p>
+            <p class="card-text"><strong>Quantidade disponível:</strong> {{ $product->quantity > 0 ? $product->quantity : 'Fora de estoque' }}</p>
             <p class="card-text"><strong>Categoria:</strong> {{ $product->category->name }}</p>
             <p class="card-text"><strong>Anunciado por:</strong> {{ $product->seller->name }}</p>
             <p class="card-text"><strong>Telefone:</strong> {{ $product->seller->phone }}</p>
 
             @auth
                 @if(auth()->user()->type === 'user')
-                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-3">
-                        @csrf
-                        <div class="input-group">
-                            <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ $product->quantity }}">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho
-                            </button>
-                        </div>
-                    </form>
+                    @if(verifyStock($product->id,1))
+                        <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-3">
+                            @csrf
+                            <div class="input-group">
+                                <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ $product->quantity }}">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-shopping-cart"></i> Adicionar ao Carrinho
+                                </button>
+                            </div>
+                        </form>
+                    @endif
                 @endif
             @endauth
         </div>
