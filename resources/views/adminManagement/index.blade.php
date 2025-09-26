@@ -249,17 +249,19 @@
         </div>
     </div>
 @stop
+
 @section('js')
-<script>
-    function previewUserImage(event, id) {
-        const input = event.target;
-        const preview = document.getElementById('preview-photo-' + id);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
+    <script>
+        function previewUserImage(event, id) {
+            const input = event.target;
+            const preview = document.getElementById('preview-photo-' + id);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
             }
-            reader.readAsDataURL(input.files[0]);
         }
-    }
-</script>
+    </script>
+@stop

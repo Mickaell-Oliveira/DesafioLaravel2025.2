@@ -6,6 +6,10 @@
     <h1>Produtos</h1>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+@stop
+
 @section('content')
     <form action="{{ route('products.index') }}" method="GET" class="mb-4">
         <div class="input-group mb-2">
@@ -13,7 +17,7 @@
             <button class="btn btn-primary" type="submit">Buscar</button>
         </div>
         <div class="mb-2">
-            <div class="btn-group" role="group">
+            <div class="btn-group category-filter" role="group">
                 @foreach($categories as $category)
                     <a href="{{ route('products.index', array_merge(request()->except('page'), ['category' => $category->id])) }}"
                        class="btn btn-outline-secondary {{ request('category') == $category->id ? 'active' : '' }}">

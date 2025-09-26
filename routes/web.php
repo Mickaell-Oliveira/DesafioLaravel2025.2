@@ -47,12 +47,6 @@ Route::get('/products/search', [ProductController::class, 'search'])->name('prod
 // Página de gerenciamento de produtos
 Route::get('/admin',[AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('admin.index');
 
-// Página de gerenciamento de administradores
-Route::get('/adminManagement',[AdminController::class, 'index'])->middleware(['auth', 'admin'])->name('adminManagement.index');
-
-// Página de gerenciamento de usuários
-Route::get('/usersManagement',[UserController::class, 'index'])->middleware(['auth', 'admin'])->name('usersManagement.index');
-
 // Rota para enviar email para usuário
 Route::post('/usersManagement/{user}/send-email', [UserController::class, 'sendEmail'])->middleware(['auth', 'admin'])->name('usersManagement.sendEmail');
 

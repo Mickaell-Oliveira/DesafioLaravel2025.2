@@ -310,7 +310,7 @@ return [
         ],
         [
             'text' => 'Gerenciar Usuários',
-            'url' => '/usersManagement',
+            'url' => '/users',
             'icon' => 'fas fa-fw fa-tachometer-alt',
             'can' => 'admin',
         ],
