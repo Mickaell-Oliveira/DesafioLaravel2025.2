@@ -6,6 +6,10 @@
     <h1>Histórico de Vendas</h1>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+@stop
+
 @section('content')
     <div class="card mt-3">
         <div class="card-body">

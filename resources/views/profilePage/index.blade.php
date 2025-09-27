@@ -8,6 +8,11 @@
     <h1>Meu Perfil</h1>
 @stop
 
+
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+@stop
+
 @section('content')
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between align-items-center">

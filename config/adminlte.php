@@ -65,8 +65,8 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>E</b>-commerce',
+    'logo_img' => 'vendor/adminlte/dist/img/Ecommerce.jpg',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
@@ -259,7 +259,7 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => '',
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
@@ -343,6 +343,7 @@ return [
             'url' => '/',
             'icon' => 'fas fa-fw fa-home',
             'topnav' => true,
+            'classes' => 'hide-text-below-lg'
         ],
         [
             'text' => 'Carrinho',
@@ -350,6 +351,7 @@ return [
             'icon' => 'fas fa-fw fa-shopping-cart',
             'topnav' => true,
             'can' => 'user',
+            'classes' => 'hide-text-below-lg'
         ],
     ],
 
@@ -405,6 +407,17 @@ return [
                     'type' => 'css',
                     'asset' => false,
                     'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                ],
+
+            ],
+        ],
+        'CustomCSS' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'css/custom.css',
                 ],
             ],
         ],

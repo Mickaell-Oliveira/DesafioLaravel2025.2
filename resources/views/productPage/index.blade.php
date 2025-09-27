@@ -13,6 +13,10 @@
     <h1>{{ $product->name }}</h1>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+@stop
+
 @section('content')
     <div class="card" style="max-width: 600px; margin: 0 auto;">
         <div class="card-header text-center">

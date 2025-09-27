@@ -25,25 +25,51 @@
                 <th>Vendedor</th>
             </tr>
         </thead>
-        <tbody>
-        @forelse($sales as $sale)
-            <tr>
-                <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
-                <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
-                <td>
-                    @foreach($sale->items as $item)
-                        {{ $item->product->category->name ?? '-' }}<br>
-                    @endforeach
-                </td>
-                <td>{{ $sale->buyer->name }}</td>
-                <td>{{ auth()->user()->name }}</td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="5">Nenhuma venda encontrada.</td>
-            </tr>
-        @endforelse
-        </tbody>
+        @if(auth()->user()->type === 'admin')
+            <tbody>
+            @forelse($adminSales as $sale)
+                <tr>
+                    <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
+                    <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                    <td>
+                        @foreach($sale->items as $item)
+                            {{ $item->product->category->name ?? '-' }}<br>
+                        @endforeach
+                    </td>
+                    <td>{{ $sale->buyer->name }}</td>
+                    <td>
+                        @foreach($sale->items as $item)
+                            {{ $item->seller->name ?? '-' }}<br>
+                        @endforeach
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">Nenhuma venda encontrada.</td>
+                </tr>
+            @endforelse
+            </tbody>
+        @else
+            <tbody>
+            @forelse($sales as $sale)
+                <tr>
+                    <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
+                    <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                    <td>
+                        @foreach($sale->items as $item)
+                            {{ $item->product->category->name ?? '-' }}<br>
+                        @endforeach
+                    </td>
+                    <td>{{ $sale->buyer->name }}</td>
+                    <td>{{ auth()->user()->name }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">Nenhuma venda encontrada.</td>
+                </tr>
+            @endforelse
+            </tbody>
+        @endif
     </table>
 </body>
 </html>

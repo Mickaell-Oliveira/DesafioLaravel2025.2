@@ -77,7 +77,8 @@ class SalesHistoryController extends Controller
 
         $sales = $query->orderBy('created_at', 'desc')->get();
 
-        $pdf = Pdf::loadView('salesHistory.pdf', compact('sales'));
+        $adminSales= Order::with(['buyer', 'seller', 'items.product.category' , 'items.product', 'items.seller'])->orderBy('created_at', 'desc')->get();
+        $pdf = Pdf::loadView('salesHistory.pdf', compact('sales', 'adminSales'));
         return $pdf->stream('salesHistory.pdf');
     }
 }

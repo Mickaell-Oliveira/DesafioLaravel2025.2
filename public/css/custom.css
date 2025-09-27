@@ -3,3 +3,23 @@
     flex-wrap: wrap;
     gap: 5px;
 }
+
+@media (max-width: 575px) {
+    .hide-text-below-lg {
+        font-size: 0;
+    }
+
+    .hide-text-below-lg > .fas {
+        font-size: 1rem;
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 1100px) {
+        a[data-widget="pushmenu"] {
+        display: none;
+    }
+}
+
+
+

@@ -6,6 +6,10 @@
     <h1>Meu Carrinho de Compras</h1>
 @stop
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+@stop
+
 @section('content')
     <div class="card">
         <div class="card-body">

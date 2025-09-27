@@ -17,6 +17,7 @@
             <button class="btn btn-primary" type="submit">Buscar</button>
         </div>
         <div class="mb-2">
+            <p class="mt-2">Filtrar por categoria</p>
             <div class="btn-group category-filter" role="group">
                 @foreach($categories as $category)
                     <a href="{{ route('products.index', array_merge(request()->except('page'), ['category' => $category->id])) }}"
