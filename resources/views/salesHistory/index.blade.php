@@ -41,12 +41,12 @@
                 <tbody>
                     @forelse($adminSales as $sale)
                         <tr>
-                            <td>
+                            <td data-label="Nome dos Produtos">
                                 @foreach($sale->items as $item)
                                     {{ $item->product->name }}<br>
                                 @endforeach
                             </td>
-                            <td>
+                            <td data-label="Foto">
                                 @foreach($sale->items as $item)
                                     @if($item->product && $item->product->photo)
                                         <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
@@ -56,8 +56,8 @@
                                     <br>
                                 @endforeach
                             </td>
-                            <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
-                            <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                            <td data-label="Data da Venda">{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            <td data-label="Valor">R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -77,23 +77,25 @@
                 <tbody>
                     @forelse($sales as $sale)
                         <tr>
-                            <td>
+                            <td data-label="Nome dos Produto ">
                                 @foreach($sale->items as $item)
-                                    {{ $item->product->name }}<br>
+                                    <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
                                 @endforeach
                             </td>
-                            <td>
+                            <td data-label="Foto">
                                 @foreach($sale->items as $item)
-                                    @if($item->product && $item->product->photo)
-                                        <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
-                                    @else
-                                        -
-                                    @endif
-                                    <br>
+                                    <td>
+                                        @if($item->product && $item->product->photo)
+                                            <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
+                                            <br>
+                                            @else
+                                            -
+                                        @endif
+                                    </td>
                                 @endforeach
                             </td>
-                            <td>{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
-                            <td>R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
+                            <td data-label="Data da Venda">{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            <td data-label="Valor">R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>

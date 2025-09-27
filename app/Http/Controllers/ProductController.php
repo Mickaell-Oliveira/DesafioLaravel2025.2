@@ -29,8 +29,7 @@ class ProductController extends Controller
         })
         ->when($categoryId, function($q) use ($categoryId) {
             $q->where('category_id', $categoryId);
-        })
-        ->paginate(10);
+        })->orderby('created_at', 'desc')->paginate(10);
         $categories = Category::all();
         return view('initialPage.index', [
             'products' => $products,

@@ -40,20 +40,25 @@
                 <tbody>
                     @forelse($purchases as $purchase)
                         <tr>
-                            <td>
+                            <td data-label="Nome dos Produto">
                                 @foreach($purchase->items as $item)
-                                    {{ $item->product->name }} <br>
+                                    <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
                                 @endforeach
                             </td>
-                            <td>
-                                @if($purchase->items->first() && $purchase->items->first()->product && $purchase->items->first()->product->photo)
-                                    <img src="{{ asset('storage/' . $purchase->items->first()->product->photo) }}" alt="Foto do produto" width="80">
-                                @else
-                                    -
-                                @endif
+                            <td data-label="Foto">
+                                @foreach($purchase->items as $item)
+                                    <td>
+                                        @if ($item->product && $item->product->photo)
+                                            <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80">
+                                            <br>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                @endforeach
                             </td>
-                            <td>{{ $purchase->created_at ? $purchase->created_at->format('d/m/Y H:i') : '-' }}</td>
-                            <td>R$ {{ number_format($purchase->total, 2, ',', '.') }}</td>
+                            <td data-label="Data da Compra">{{ $purchase->created_at ? $purchase->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            <td data-label="Valor">R$ {{ formatPrice($purchase->total) }}</td>
                         </tr>
                     @empty
                         <tr>

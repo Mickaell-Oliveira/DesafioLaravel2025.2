@@ -32,12 +32,12 @@
                 <tbody>
                     @forelse($products as $product)
                         <tr>
-                            <td>{{ $product->id }}</td>
-                            <td>{{ $product->name }}</td>
-                            <td>{{ $product->category->name ?? '-' }}</td>
-                            <td>R$ {{ formatPrice($product->price) }}</td>
-                            <td>{{ $product->quantity }}</td>
-                            <td>
+                            <td data-label="ID">{{ $product->id }}</td>
+                            <td data-label="Nome">{{ $product->name }}</td>
+                            <td data-label="Categoria">{{ $product->category->name ?? '-' }}</td>
+                            <td data-label="Preço">R$ {{ formatPrice($product->price) }}</td>
+                            <td data-label="Quantidade">{{ $product->quantity }}</td>
+                            <td data-label="Ações">
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-{{ $product->id }}">Visualizar</button>
                                 @auth
                                     @if (auth()->user()->type === 'admin' ||  auth()->user()->id === $product->user_id)
@@ -234,20 +234,4 @@
             {!! $chart->renderJs() !!}
         @endif
     @endauth
-@stop
-
-@section('js')
-<script>
-function previewImage(event, id) {
-    const input = event.target;
-    const preview = document.getElementById('preview-photo-' + id);
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-        }
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
 @stop

@@ -29,11 +29,11 @@
                 <tbody>
                     @forelse($admins as $admin)
                         <tr>
-                            <td>{{ $admin->id }}</td>
-                            <td>{{ $admin->name }}</td>
-                            <td>{{ $admin->email }}</td>
-                            <td>{{ $admin->type }}</td>
-                            <td>
+                            <td data-label="ID">{{ $admin->id }}</td>
+                            <td data-label="Nome">{{ $admin->name }}</td>
+                            <td data-label="Email">{{ $admin->email }}</td>
+                            <td data-label="Tipo">{{ $admin->type }}</td>
+                            <td data-label="Ações">
                                 <!-- Botão Visualizar -->
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-view-{{ $admin->id }}">Visualizar</button>
                                 @auth
@@ -252,20 +252,4 @@
             </div>
         </div>
     </div>
-@stop
-
-@section('js')
-    <script>
-        function previewUserImage(event, id) {
-            const input = event.target;
-            const preview = document.getElementById('preview-photo-' + id);
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
 @stop

@@ -33,11 +33,11 @@
                 <tbody>
                     @forelse($users as $user)
                         <tr>
-                            <td>{{ $user->id }}</td>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->type }}</td>
-                            <td>
+                            <td data-label="ID">{{ $user->id }}</td>
+                            <td data-label="Nome">{{ $user->name }}</td>
+                            <td data-label="Email">{{ $user->email }}</td>
+                            <td data-label="Tipo">{{ $user->type }}</td>
+                            <td data-label="Ações">
                                 <!-- Botão Visualizar -->
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-view-{{ $user->id }}">Visualizar</button>
 
@@ -64,9 +64,9 @@
                                         <p><strong>Nome:</strong> {{ $user->name }}</p>
                                         <p><strong>Email:</strong> {{ $user->email }}</p>
                                         <p><strong>Telefone:</strong> {{ $user->phone }}</p>
-                                        <p><strong>Data de Nascimento:</strong> {{ $user->birth_date }}</p>
+                                        <p><strong>Data de Nascimento:</strong> {{ formatDate($user->birth_date) }}</p>
                                         <p><strong>CPF:</strong> {{ $user->cpf }}</p>
-                                        <p><strong>Saldo:</strong> R$ {{ number_format($user->saldo, 2, ',', '.') }}</p>
+                                        <p><strong>Saldo:</strong> R$ {{ formatPrice($user->saldo) }}</p>
                                         <p><strong>Tipo:</strong> {{ $user->type }}</p>
                                         <hr>
                                         <h5>Endereço</h5>
@@ -124,7 +124,7 @@
 
                                             <div class="form-group">
                                                 <label for="birth_date-{{ $user->id }}">Data de Nascimento</label>
-                                                <input type="date" class="form-control" id="birth_date-{{ $user->id }}" name="birth_date" value="{{ $user->birth_date ? \Carbon\Carbon::parse($user->birth_date)->format('Y-m-d') : '' }}">
+                                                <input type="date" class="form-control" id="birth_date-{{ $user->id }}" name="birth_date" value="{{ $user->birth_date->format('Y-m-d') }}">
                                             </div>
 
                                             <div class="form-group">
@@ -167,12 +167,9 @@
                                                 <label for="photo-{{ $user->id }}">Foto</label>
                                                 <div class="mt-2 mb-2 text-center">
                                                     <img id="preview-photo-{{ $user->id }}"
-                                                         src="{{ $user->photo ? asset('storage/' . $user->photo) : 'https://via.placeholder.com/150' }}"
-                                                         alt="Foto do usuário"
-                                                         class="img-fluid rounded mb-2" width="150">
-
-                                                    <input type="file" id="photo-{{ $user->id }}" name="photo" class="d-none" accept="image/*"
-                                                           onchange="previewUserImage(event, {{ $user->id }})">
+                                                        src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('vendor/adminlte/dist/img/person.png')}}"
+                                                        alt="Foto do usuário" class="img-fluid rounded mb-2" width="150">
+                                                    <input type="file" id="photo-{{ $user->id }}" name="photo" class="d-none" accept="image/*" onchange="previewUserImage(event, '{{ $user->id }}')">
                                                     <label for="photo-{{ $user->id }}" class="btn btn-primary btn-sm mt-2">Escolher nova foto</label>
                                                 </div>
                                             </div>
@@ -286,10 +283,8 @@
                         <div class="form-group">
                             <label for="photo-create">Foto (opcional)</label>
                             <div class="mt-2 mb-2 text-center">
-                                <img id="preview-photo-create" src="https://via.placeholder.com/150"
-                                     alt="Preview da foto" class="img-fluid rounded mb-2" width="150">
-                                <input type="file" id="photo-create" name="photo" class="d-none" accept="image/*"
-                                       onchange="previewUserImage(event, 'create')">
+                                <img id="preview-photo-create" alt="Preview da foto" class="img-fluid rounded mb-2" width="100" src="{{ asset('vendor/adminlte/dist/img/person.png') }}">
+                                <input type="file" id="photo-create" name="photo" class="d-none" accept="image/*" onchange="previewUserImage(event, 'create')">
                                 <label for="photo-create" class="btn btn-primary btn-sm mt-2">Escolher foto</label>
                             </div>
                         </div>
@@ -304,17 +299,3 @@
     </div>
 
 @stop
-@section('js')
-<script>
-    function previewUserImage(event, id) {
-        const input = event.target;
-        const preview = document.getElementById('preview-photo-' + id);
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-</script>
