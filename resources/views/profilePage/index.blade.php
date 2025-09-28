@@ -76,21 +76,13 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="photo">Foto</label>
+                        <label for="photo-{{ $user->id }}">Foto</label>
                         <div class="d-flex flex-column align-items-center">
-                            <img
-                                src="{{ $user->photo ? asset('storage/' . $user->photo) : '' }}"
-                                alt="Foto do usuário"
-                                id="profilePhotoPreview"
-                                class="img-thumbnail mb-2"
-                                style="width:180px; height:180px; object-fit:cover; cursor:pointer; border-radius:50%; background:#eee;"
-                                onclick="if(!document.getElementById('profilePhotoPreview').hasAttribute('disabled')) document.getElementById('photo').click()"
-                            >
-                            @if (!$user->photo)
-                                <span class="position-absolute" style="top:90px;">Sem foto</span>
-                            @endif
-                            <input type="file" name="photo" id="photo" class="form-control d-none" accept="image/*">
-                            <button type="button" id="changePhotoBtn" class="btn btn-secondary btn-sm mt-2" style="display:none;" onclick="document.getElementById('photo').click()">Mudar foto</button>
+                            <img src="{{ $user->photo ? asset('storage/' . $user->photo) : asset('vendor/adminlte/dist/img/person.png') }}" alt="sem foto" id="preview-photo-{{ $user->id }}" class="img-thumbnail mb-2" style="width:180px; height:180px; object-fit:cover; border-radius:50%; background:#eee;">
+                            <input type="file" name="photo" id="photo-{{ $user->id }}" class="form-control d-none" accept="image/*" onchange="previewUserImage(event, {{ $user->id }})">
+                            <button type="button" id="changePhotoBtn-{{ $user->id }}" class="btn btn-secondary btn-sm mt-2" style="display:none;" onclick="document.getElementById('photo-{{ $user->id }}').click()">
+                                Mudar foto
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -161,25 +153,21 @@
 
 @section('js')
 <script>
-    // Ao clicar no botão editar pergfil
+    // Ao clicar no botão editar perfil habilita os campos para edição
     document.getElementById('editProfileBtn').addEventListener('click', function() {
         const inputs = document.querySelectorAll('#profileForm input');
         inputs.forEach(input => input.removeAttribute('disabled'));
+
         document.getElementById('saveBtn').style.display = 'inline-block';
-        document.getElementById('changePhotoBtn').style.display = 'inline-block';
-    });
+        document.getElementById('changePhotoBtn-{{ $user->id }}').style.display = 'inline-block';
 
-    // Muda a preview da foto ao selecionar um arquivo
-    document.getElementById('photo').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                document.getElementById('profilePhotoPreview').src = ev.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-    });
+        const preview = document.getElementById('preview-photo-{{ $user->id }}');
+        const fileInput = document.getElementById('photo-{{ $user->id }}');
 
+        preview.style.cursor = 'pointer';
+        preview.onclick = function() {
+            fileInput.click();
+        };
+    });
 </script>
 @stop

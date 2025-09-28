@@ -221,12 +221,24 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="subject">Assunto</label>
-                                                <input type="text" class="form-control" name="subject" id="subject" required>
+                                                <label for="subject-{{ $user->id }}">Assunto</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="subject"
+                                                    id="subject-{{ $user->id }}"
+                                                    required
+                                                >
                                             </div>
                                             <div class="form-group">
-                                                <label for="message">Mensagem</label>
-                                                <textarea class="form-control" name="message" id="message" rows="4" required></textarea>
+                                                <label for="message-{{ $user->id }}">Mensagem</label>
+                                                <textarea
+                                                    class="form-control"
+                                                    name="message"
+                                                    id="message-{{ $user->id }}"
+                                                    rows="4"
+                                                    required
+                                                ></textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -237,7 +249,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                     @empty
                         <tr>
                             <td colspan="5" class="text-center">Nenhum usuário encontrado.</td>
