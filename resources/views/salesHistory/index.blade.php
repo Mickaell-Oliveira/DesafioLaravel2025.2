@@ -44,20 +44,20 @@
                         <tr>
                             <td data-label="Nome dos Produtos">
                                 @foreach($sale->items as $item)
-                                    <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
+                                    {{ $item->product->name }} ({{ $item->quantity }}) <br>
                                 @endforeach
                             </td>
                             <td data-label="Foto">
-                                @foreach($sale->items as $item)
-                                    <td>
+                                <div class="td-content">
+                                    @foreach($sale->items as $item)
                                         @if($item->product && $item->product->photo)
-                                            <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
+                                            <img class="table-img" src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
                                             <br>
                                             @else
-                                            -
+                                            - <br>
                                         @endif
-                                    </td>
-                                @endforeach
+                                    @endforeach
+                                </div>
                             </td>
                             <td data-label="Data da Venda">{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
                             <td data-label="Valor">R$ {{ number_format($sale->total, 2, ',', '.') }}</td>
@@ -82,20 +82,22 @@
                         <tr>
                             <td data-label="Nome dos Produtos ">
                                 @foreach($sale->items as $item)
-                                    <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
+                                    {{ $item->product->name }} ({{ $item->quantity }}) <br>
                                 @endforeach
                             </td>
                             <td data-label="Foto">
-                                @foreach($sale->items as $item)
-                                    <td>
-                                        @if($item->product && $item->product->photo)
-                                            <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
-                                            <br>
-                                            @else
-                                            -
-                                        @endif
-                                    </td>
-                                @endforeach
+                                <div class="td-content">
+                                    @foreach($sale->items as $item)
+                                        <div class="td-content">
+                                            @if($item->product && $item->product->photo)
+                                                <img class="table-img" src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
+                                                <br>
+                                                @else
+                                                -
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
                             </td>
                             <td data-label="Data da Venda">{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
                             <td data-label="Valor">R$ {{ number_format($sale->total, 2, ',', '.') }}</td>

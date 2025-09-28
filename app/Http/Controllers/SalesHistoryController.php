@@ -13,6 +13,7 @@ class SalesHistoryController extends Controller
 {
     public function salesHistory(Request $request)
     {
+        // Filtro para vendas do vendedor autenticado
         $query = Order::whereHas('items.product', function ($subQuery) {
             $subQuery->where('seller_id', Auth::id());
         })->with([
@@ -26,15 +27,15 @@ class SalesHistoryController extends Controller
         ]);
 
         if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+            $query->whereDate('created_at', '>=', $request->start_date); // filtra pela data de início
         }
         if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+            $query->whereDate('created_at', '<=', $request->end_date); // filtra pela data de fim
         }
 
         $sales = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        $SalesChart_options =[
+        $SalesChart_options = [
             'chart_title'           => 'Vendas Realizadas no Mês',
             'model'                 => OrderItem::class,
             'chart_type'            => 'line',
@@ -49,7 +50,15 @@ class SalesHistoryController extends Controller
 
         $SalesChart = new LaravelChart($SalesChart_options);
 
-        $adminSales= Order::with(['buyer', 'seller', 'items.product.category' , 'items.product', 'items.seller'])->orderBy('created_at', 'desc')->paginate(10);
+        // Filtro para admin ver todas as vendas
+        $adminSalesQuery = Order::with(['buyer', 'seller', 'items.product.category', 'items.product', 'items.seller']);
+        if ($request->filled('start_date')) {
+            $adminSalesQuery->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $adminSalesQuery->whereDate('created_at', '<=', $request->end_date);
+        }
+        $adminSales = $adminSalesQuery->orderBy('created_at', 'desc')->paginate(10)->appends($request->except('page'));
 
         return view('salesHistory.index', compact('sales', 'SalesChart', 'adminSales'));
     }
@@ -57,7 +66,7 @@ class SalesHistoryController extends Controller
     public function pdf(Request $request)
     {
         $query = Order::whereHas('items.product', function ($subQuery) {
-            $subQuery->where('seller_id', Auth::id());
+            $subQuery->where('seller_id', Auth::id()); // filtra pelos produtos do vendedor autenticado
         })->with([
             'buyer',
             'seller',
@@ -69,15 +78,24 @@ class SalesHistoryController extends Controller
         ]);
 
         if ($request->filled('start_date')) {
-            $query->whereDate('created_at', '>=', $request->start_date);
+            $query->whereDate('created_at', '>=', $request->start_date); // filtra pela data de início
         }
         if ($request->filled('end_date')) {
-            $query->whereDate('created_at', '<=', $request->end_date);
+            $query->whereDate('created_at', '<=', $request->end_date); // filtra pela data de fim
         }
 
         $sales = $query->orderBy('created_at', 'desc')->get();
 
-        $adminSales= Order::with(['buyer', 'seller', 'items.product.category' , 'items.product', 'items.seller'])->orderBy('created_at', 'desc')->get();
+        // Relatório completo para o admin
+        $adminSalesQuery = Order::with(['buyer', 'seller', 'items.product.category', 'items.product', 'items.seller']);
+        if ($request->filled('start_date')) {
+            $adminSalesQuery->whereDate('created_at', '>=', $request->start_date);
+        }
+        if ($request->filled('end_date')) {
+            $adminSalesQuery->whereDate('created_at', '<=', $request->end_date);
+        }
+        $adminSales = $adminSalesQuery->orderBy('created_at', 'desc')->get();
+
         $pdf = Pdf::loadView('salesHistory.pdf', compact('sales', 'adminSales'));
         return $pdf->stream('salesHistory.pdf');
     }

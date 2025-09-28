@@ -1,3 +1,5 @@
+@vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/cepAPI.js'])
+
 @extends('adminlte::page')
 
 @section('title', 'Gerenciar Produtos')
@@ -131,11 +133,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="price-{{ $product->id }}">Preço</label>
-                                    <input type="number" step="0.01" class="form-control" id="price-{{ $product->id }}" name="price" value="{{ $product->price }}" required>
+                                    <input type="number" step="0.01" class="form-control" id="price-{{ $product->id }}" name="price" value="{{ $product->price }}" min="0" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="quantity-{{ $product->id }}">Quantidade</label>
-                                    <input type="number" class="form-control" id="quantity-{{ $product->id }}" name="quantity" value="{{ $product->quantity }}" required>
+                                    <input type="number" class="form-control" id="quantity-{{ $product->id }}" name="quantity" value="{{ $product->quantity }}" min="1" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="description-{{ $product->id }}">Descrição</label>
@@ -174,9 +176,15 @@
                         @csrf
                         <div class="modal-body">
                             <!--Inserir Foto-->
-                            <div>
+                            <div class="form-group">
                                 <label for="photo-create">Foto</label>
-                                <input type="file" class="form-control" id="photo-create" name="photo" required>
+                                <div class="mt-2 mb-2 text-center">
+                                    <img id="preview-photo-create-product" src="https://via.placeholder.com/150" alt="Product Image" class="img-fluid mb-2">
+                                    <input type="file" id="photo-create" name="photo" class="d-none" accept="image/*"
+                                        onchange="previewImage(event, 'create-product')" required>
+                                    <label for="photo-create" class="btn btn-primary btn-sm mt-2">Escolher foto</label>
+
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="name-create">Nome</label>
@@ -193,11 +201,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="price-create">Preço</label>
-                                <input type="number" step="0.01" class="form-control" id="price-create" name="price" required>
+                                <input type="number" step="0.01" class="form-control" id="price-create" name="price" min="0" required>
                             </div>
                             <div class="form-group">
                                 <label for="quantity-create">Quantidade</label>
-                                <input type="number" class="form-control" id="quantity-create" name="quantity" required>
+                                <input type="number" class="form-control" id="quantity-create" name="quantity" min="1" required>
                             </div>
                             <div class="form-group">
                                 <label for="description-create">Descrição</label>

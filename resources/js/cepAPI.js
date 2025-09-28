@@ -1,16 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.cep-input').forEach(function(cepInput) {
+    document.querySelectorAll('.cep-input').forEach(function(cepInput) { // função para buscar o endereço pelo CEP
 
-        cepInput.addEventListener('blur', function() {
+        cepInput.addEventListener('blur', function() { // ao sair do campo
 
-            const cep = this.value.replace(/\D/g, '');
+            const cep = this.value.replace(/\D/g, ''); // remove tudo que não é dígito
             const form = this.closest('form');
             if (!form) return;
 
-            const logradouroInput = form.querySelector('.logradouro-input');
-            const bairroInput = form.querySelector('.bairro-input');
-            const cidadeInput = form.querySelector('.cidade-input');
-            const estadoInput = form.querySelector('.estado-input');
+            const logradouroInput = form.querySelector('.logradouro-input'); // campo de logradouro
+            const bairroInput = form.querySelector('.bairro-input'); // campo do bairro
+            const cidadeInput = form.querySelector('.cidade-input'); // campo da cidade
+            const estadoInput = form.querySelector('.estado-input'); // campo do estado
 
             // Limpa os campos de endereço
             logradouroInput.value = '';
@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
             cidadeInput.value = '';
             estadoInput.value = '';
 
-            if (cep.length !== 8) {
+            if (cep.length !== 8) { // se o CEP não tiver 8 dígitos
                 return;
             }
 
-            fetch(`/api/cep/${cep}`)
+            fetch(`/api/cep/${cep}`) // busca o endereço na API
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Erro na requisição');
@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert(data.error);
                         return;
                     }
+                    // Preenche os campos com os dados retornados
                     logradouroInput.value = data.logradouro || '';
                     bairroInput.value = data.bairro || '';
                     cidadeInput.value = data.localidade || '';

@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
             ProductSeeder::class,
-            OrderSeeder::class, // Seeder recomendada para testes
+            OrderSeeder::class,
+            OrderItemsSeeder::class,
         ]);
     }
 }

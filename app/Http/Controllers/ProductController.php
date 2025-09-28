@@ -12,20 +12,20 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    public function search(Request $request)
+    public function search(Request $request) // busca produtos
     {
         $query = $request->input('query');
         $results = Product::where('name', 'like', "%{$query}%")->get();
-        return view('initialPage.index', compact('results'));
+        return view('initialPage.index', compact('results')); // exibe os resultados na página inicial
     }
 
     // Página principal de produtos
     public function index(Request $request)
     {
-        $query = $request->input('query');
-        $categoryId = $request->input('category');
+        $query = $request->input('query'); // termo de busca
+        $categoryId = $request->input('category'); // filtro de categoria
         $products = Product::when($query, function($q) use ($query) {
-            $q->where('name', 'like', "%{$query}%");
+            $q->where('name', 'like', "%{$query}%"); // busca pelo nome do produto
         })
         ->when($categoryId, function($q) use ($categoryId) {
             $q->where('category_id', $categoryId);
@@ -72,32 +72,32 @@ class ProductController extends Controller
         return redirect()->route('productsManagement.index');
     }
 
-    public function show($id)
+    public function show($id) // exibe a página de um produto
     {
         $product = Product::findOrFail($id);
         return view('productPage.index', compact('product'));
     }
 
-    public function getCategories()
+    public function getCategories() // obtém as categorias dos produtos
     {
         $categories = Category::all();
         return $categories;
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id) // atualiza um produto
     {
         $product = Product::findOrFail($id);
 
         $data = $request->all();
 
-        if($request->hasFile('photo'))
+        if($request->hasFile('photo')) // atualiza a foto do produto
         {
             if($product->photo && Storage::disk('public')->exists($product->photo)) {
-                Storage::disk('public')->delete($product->photo);
+                Storage::disk('public')->delete($product->photo); // exclui a foto antiga
             }
 
-            $path = $request->file('photo')->store('products', 'public');
-            $data['photo'] = $path;
+            $path = $request->file('photo')->store('products', 'public'); // armazena a nova foto
+            $data['photo'] = $path; // atualiza o caminho da foto
         }
 
 
@@ -105,27 +105,27 @@ class ProductController extends Controller
         return redirect()->route('productsManagement.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
-public function destroy($id)
-{
-    $product = Product::findOrFail($id);
-    if ($product->photo && Storage::disk('public')->exists($product->photo)) {
-        Storage::disk('public')->delete($product->photo);
+    public function destroy($id) // exclui um produto
+    {
+        $product = Product::findOrFail($id);
+        if ($product->photo && Storage::disk('public')->exists($product->photo)) {
+            Storage::disk('public')->delete($product->photo); // exclui a foto do produto
+        }
+        $product->delete();
+
+        return redirect()->route('productsManagement.index')->with('success', 'Produto excluído com sucesso!');
     }
-    $product->delete();
 
-    return redirect()->route('productsManagement.index')->with('success', 'Produto excluído com sucesso!');
-}
-
-    public function store(Request $request)
+    public function store(Request $request) // cria um novo produto
     {
         $data = $request->all();
 
         if($request->hasFile('photo'))
         {
-            $path = $request->file('photo')->store('products', 'public');
-            $data['photo'] = $path;
+            $path = $request->file('photo')->store('products', 'public'); // armazena a foto
+            $data['photo'] = $path; // atualiza o caminho da foto
         }
-        Product::create($data);
+        Product::create($data); // cria o produto
         return redirect()->route('productsManagement.index');
     }
 

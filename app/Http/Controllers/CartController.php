@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index() // exibe o carrinho
     {
-        $cartItems = session()->get('cart', []);
+        $cartItems = session()->get('cart', []); // Itens do carrinho
         $total = 0;
 
         // Calcula o total
@@ -26,19 +26,19 @@ class CartController extends Controller
         return view('cart.index', compact('cartItems', 'total'));
     }
 
-    public function add(Request $request, Product $product)
+    public function add(Request $request, Product $product) // adiciona um produto ao carrinho
     {
         $cart = session()->get('cart', []);
 
-        $request->validate([
+        $request->validate([ // valida a quantidade
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $quantity = $request->input('quantity');
+        $quantity = $request->input('quantity'); // quantidade a ser adicionada
 
-        if (isset($cart[$product->id])) {
+        if (isset($cart[$product->id])) { // se o produto já estiver no carrinho, atualiza a quantidade
             $cart[$product->id]['quantity'] += $quantity;
-        } else {
+        } else { // se não, adiciona o produto ao carrinho
             $cart[$product->id] = [
                 "name" => $product->name,
                 "quantity" => $quantity,
@@ -47,20 +47,20 @@ class CartController extends Controller
             ];
         }
 
-        $product->quantity -= $quantity;
-        $product->save();
-        
-        session()->put('cart', $cart);
+        $product->quantity -= $quantity; // reduz a quantidade do produto no estoque
+        $product->save(); // salva a alteração no banco de dados
+
+        session()->put('cart', $cart); // atualiza a sessão do carrinho
 
         return redirect()->back()->with('success', 'Produto adicionado ao carrinho!');
     }
 
-    public function update(Request $request, $productId)
+    public function update(Request $request, $productId) // atualiza a quantidade de um produto no carrinho
     {
         $cart = session()->get('cart');
 
         if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = $request->quantity;
+            $cart[$productId]['quantity'] = $request->quantity; // atualiza a quantidade
             session()->put('cart', $cart);
             return redirect()->route('cart.index')->with('success', 'Carrinho atualizado com sucesso!');
         }
@@ -68,67 +68,67 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('error', 'Item não encontrado no carrinho.');
     }
 
-    public function remove($productId)
+    public function remove($productId) // remove um produto do carrinho
     {
         $cart = session()->get('cart');
 
-        if (isset($cart[$productId])) {
-            unset($cart[$productId]);
-            session()->put('cart', $cart);
+        if (isset($cart[$productId])) { // se o produto estiver no carrinho, remove
+            unset($cart[$productId]); // remove o item do carrinho
+            session()->put('cart', $cart); // atualiza a sessão do carrinho
             return redirect()->route('cart.index')->with('success', 'Produto removido do carrinho!');
         }
 
         return redirect()->route('cart.index')->with('error', 'Item não encontrado no carrinho.');
     }
 
-    public function checkout(Request $request)
+    public function checkout(Request $request) // Integração da API do PagSeguro
     {
-        $url = config('services.pagseguro.checkout_url');
-        $token = config('services.pagseguro.token');
+        $url = config('services.pagseguro.checkout_url'); // URL da API
+        $token = config('services.pagseguro.token'); // Token da API
 
-        $cartItems = json_decode($request->cart_items, true);
+        $cartItems = json_decode($request->cart_items, true); // Itens do carrinho
 
-        $items = array_values(array_map(fn($item)=>[
-            'name' => $item['name'],
-            'quantity' => $item['quantity'],
-            'unit_amount' => $item['price'] * 100
+        $items = array_values(array_map(fn($item)=>[ // formata os itens para a API
+            'name' => $item['name'], // nome do produto
+            'quantity' => $item['quantity'], // quantidade
+            'unit_amount' => $item['price'] * 100 // preço em centavos
         ], $cartItems));
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Content-type' => 'application/json'
-        ])->withoutVerifying()->post($url,[
-            'reference_id' => uniqid(),
-            'items' => $items,
+        $response = Http::withHeaders([ // faz a requisição para a API
+            'Authorization' => 'Bearer ' . $token, // token de autorização
+            'Content-type' => 'application/json' // tipo de conteúdo
+        ])->withoutVerifying()->post($url,[ // desabilita a verificação SSL
+            'reference_id' => uniqid(), // id único da transação
+            'items' => $items, // itens do carrinho
         ]);
 
-        if($response->successful())
+        if($response->successful()) // se a requisição for bem sucedida
         {
-            $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']);
+            $total = collect($cartItems)->sum(fn($item) => $item['price'] * $item['quantity']); // calcula o total
 
-            $order = Order::create([
+            $order = Order::create([ // cria o pedido
                 'id' => $response['reference_id'],
                 'status' => 1,
                 'buyer_id' => Auth::id(),
                 'total' => $total
             ]);
 
-            Transaction::create([
+            Transaction::create([ // cria a transação
                 'user_id' => Auth::id(),
                 'order_id' => $order->id,
                 'amount' => $total
             ]);
 
-        foreach ($cartItems as $productId => $item) {
-            $product = Product::find($productId);
-            $seller = User::find($product->user_id);
+        foreach ($cartItems as $productId => $item) { // para cada item do carrinho
+            $product = Product::find($productId); // busca o produto
+            $seller = User::find($product->user_id); // busca o vendedor
 
-            $paymentAmount = $item['price'] * $item['quantity'];
+            $paymentAmount = $item['price'] * $item['quantity']; // calcula o valor a ser pago ao vendedor
 
-            $seller->saldo += $paymentAmount;
-            $seller->save();
+            $seller->saldo += $paymentAmount; // adiciona o valor ao saldo do vendedor
+            $seller->save();    // salva a alteração no banco de dados
 
-            OrderItem::create([
+            OrderItem::create([ // cria o item do pedido
                 'order_id' => $order->id,
                 'product_id' => $productId,
                 'seller_id' => $product->user_id,
@@ -137,16 +137,16 @@ class CartController extends Controller
             ]);
         }
 
-            $pay_link = data_get($response->json(), 'links.1.href');
+            $pay_link = data_get($response->json(), 'links.1.href'); // link de pagamento
 
-            session()->forget('cart');
-            return redirect()->away($pay_link);
+            session()->forget('cart'); // limpa o carrinho
+            return redirect()->away($pay_link); // redireciona para o link de pagamento
         }
 
         return redirect('paymentError');
     }
 
-    public function paymentError()
+    public function paymentError() // exibe a página de erro de pagamento
     {
         return view('cart.paymentError');
     }

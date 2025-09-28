@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class InitialPageController extends Controller
 {
-    public function index()
+    public function index() // exibe a página inicial
     {
         return view('initialPage.index');
     }

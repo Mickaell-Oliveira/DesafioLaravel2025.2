@@ -5,7 +5,7 @@
 
 @section('content_header')
     <h1>Gerenciar Administradores</h1>
-            <button class="btn btn-success" data-toggle="modal" data-target="#modal-create">Novo Administrador</button>
+    <button class="btn btn-success" data-toggle="modal" data-target="#modal-create">Novo Administrador</button>
 
 @stop
 
@@ -76,7 +76,7 @@
                                         <p><strong>Atualizado em:</strong> {{ $admin->updated_at->format('d/m/Y') }}</p>
                                         @if($admin->photo)
                                             <p><strong>Foto:</strong></p>
-                                            <img src="{{ asset('storage/' . $admin->photo) }}" alt="Foto do administrador" width="150">
+                                            <img src="{{ asset('storage/' . $admin->photo) }}" alt="https://avatar.iran.liara.run/public/17" width="150">
                                         @endif
                                     </div>
                                 </div>
@@ -150,7 +150,7 @@
                                                 <label for="photo-edit-{{ $admin->id }}">Foto</label>
                                                 <div class="mt-2 mb-2 text-center">
                                                     <img id="preview-photo-{{ $admin->id }}"
-                                                         src="{{ $admin->photo ? asset('storage/' . $admin->photo) : 'https://via.placeholder.com/150' }}"
+                                                         src="{{ $admin->photo ? asset('storage/' . $admin->photo) : 'https://avatar.iran.liara.run/public/17' }}"
                                                          alt="Foto do administrador"
                                                          class="img-fluid rounded mb-2" width="150">
                                                     <input type="file" id="photo-edit-{{ $admin->id }}" name="photo" class="d-none" accept="image/*"
@@ -237,7 +237,7 @@
                         <div class="form-group">
                             <label for="photo-create">Foto (opcional)</label>
                             <div class="mt-2 mb-2 text-center">
-                                <img id="preview-photo-create" src="https://via.placeholder.com/150"
+                                <img id="preview-photo-create" src="{{ asset('vendor/adminlte/dist/img/person.png') }}"
                                      alt="Preview da foto" class="img-fluid rounded mb-2" width="150">
                                 <input type="file" id="photo-create" name="photo" class="d-none" accept="image/*"
                                        onchange="previewUserImage(event, 'create')">
