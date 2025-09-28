@@ -41,6 +41,10 @@
     flex: 1;
     text-align: left;
   }
+
+  .table-bordered {
+    border: none;
+  }
 }
 
 

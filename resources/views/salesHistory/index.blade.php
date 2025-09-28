@@ -8,6 +8,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="icon" href="/vendor/adminlte/dist/img/SalesIcon.png" type="image/png">
 @stop
 
 @section('content')
@@ -43,17 +44,19 @@
                         <tr>
                             <td data-label="Nome dos Produtos">
                                 @foreach($sale->items as $item)
-                                    {{ $item->product->name }}<br>
+                                    <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
                                 @endforeach
                             </td>
                             <td data-label="Foto">
                                 @foreach($sale->items as $item)
-                                    @if($item->product && $item->product->photo)
-                                        <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
-                                    @else
-                                        -
-                                    @endif
-                                    <br>
+                                    <td>
+                                        @if($item->product && $item->product->photo)
+                                            <img src="{{ asset('storage/' . $item->product->photo) }}" alt="Foto do produto" width="80" style="margin-bottom: 4px;">
+                                            <br>
+                                            @else
+                                            -
+                                        @endif
+                                    </td>
                                 @endforeach
                             </td>
                             <td data-label="Data da Venda">{{ $sale->created_at ? $sale->created_at->format('d/m/Y H:i') : '-' }}</td>
@@ -77,7 +80,7 @@
                 <tbody>
                     @forelse($sales as $sale)
                         <tr>
-                            <td data-label="Nome dos Produto ">
+                            <td data-label="Nome dos Produtos ">
                                 @foreach($sale->items as $item)
                                     <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
                                 @endforeach

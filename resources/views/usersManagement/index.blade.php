@@ -15,6 +15,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="icon" href="/vendor/adminlte/dist/img/userIcon.jpeg" type="image/jpeg">
 @stop
 
 @section('content')

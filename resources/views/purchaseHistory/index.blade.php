@@ -8,6 +8,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="icon" href="/vendor/adminlte/dist/img/purchaseIcon.jpeg" type="image/jpeg">
 @stop
 
 @section('content')
@@ -40,7 +41,7 @@
                 <tbody>
                     @forelse($purchases as $purchase)
                         <tr>
-                            <td data-label="Nome dos Produto">
+                            <td data-label="Nome dos Produtos">
                                 @foreach($purchase->items as $item)
                                     <td>{{ $item->product->name }} ({{ $item->quantity }}) <br></td>
                                 @endforeach

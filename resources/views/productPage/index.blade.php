@@ -15,6 +15,7 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <link rel="icon" href="{{ asset('storage/'. $product->photo) }}" type="image/png">
 @stop
 
 @section('content')
