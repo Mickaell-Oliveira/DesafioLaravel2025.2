@@ -20,6 +20,7 @@ Route::prefix('profile')->middleware('auth')->name('profilePage.')->group(functi
     Route::get('/', [UserController::class, 'profile'])->name('index');
     Route::patch('/', [UserController::class, 'update'])->name('update');
     Route::delete('/', [UserController::class, 'destroy'])->name('destroy');
+    Route::get('/password', [UserController::class, 'changePassword'])->name('changePassword');
 });
 
 // Rotas para administradores gerenciarem usuários

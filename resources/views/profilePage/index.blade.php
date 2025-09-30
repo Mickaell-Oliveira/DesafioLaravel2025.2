@@ -15,6 +15,14 @@
 @stop
 
 @section('content')
+    @if (session('success'))
+        <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="card-title">Informações do Usuário</h3>
@@ -22,6 +30,9 @@
                 <button id="editProfileBtn" type="button" class="btn btn-primary btn-sm">
                     <i class="fas fa-edit"></i> Editar Perfil
                 </button>
+                <a href="{{ route('profilePage.changePassword') }}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-key"></i> Alterar Senha
+                </a>
 
                 <form method="POST" action="{{ route('profilePage.destroy') }}" class="d-inline">
                     @csrf
@@ -155,19 +166,37 @@
 <script>
     // Ao clicar no botão editar perfil habilita os campos para edição
     document.getElementById('editProfileBtn').addEventListener('click', function() {
+        // Habilitar todos os inputs dentro do formulário
         const inputs = document.querySelectorAll('#profileForm input');
         inputs.forEach(input => input.removeAttribute('disabled'));
 
+        // Mostrar o botão de salvar
         document.getElementById('saveBtn').style.display = 'inline-block';
         document.getElementById('changePhotoBtn-{{ $user->id }}').style.display = 'inline-block';
 
+        // Permitir clicar na imagem para selecionar uma nova foto
         const preview = document.getElementById('preview-photo-{{ $user->id }}');
         const fileInput = document.getElementById('photo-{{ $user->id }}');
 
+        // Tornar a imagem clicável
         preview.style.cursor = 'pointer';
         preview.onclick = function() {
             fileInput.click();
         };
+    });
+
+    // Sumir com a mensagem de senha alterada
+    document.addEventListener('DOMContentLoaded', function() {
+        var alert = document.getElementById('success-alert');
+        if (alert) {
+            setTimeout(function() {
+                alert.style.transition = "opacity 0.5s";
+                alert.style.opacity = "0";
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            }, 1700);
+        }
     });
 </script>
 @stop

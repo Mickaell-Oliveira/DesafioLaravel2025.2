@@ -41,7 +41,8 @@
         @forelse ($products as $product)
             @if(auth()->user()->id !== $product->user_id)
                 <div class="d-flex justify-content-between align-items-center mb-2 p-2 border-bottom">
-                    <a href="{{ route('products.show', $product->id) }}" class="text-dark text-decoration-none">
+                    <a href="{{ route('products.show', $product->id) }}" class="text-dark text-decoration-none hover:text-primary">
+                        <img src="{{ $product->photo ? asset('storage/' . $product->photo) : asset('vendor/adminlte/dist/img/productIcon.png') }}" alt="{{ $product->name }}" class="img-thumbnail" style="max-width: 200px;"> <br>
                         <strong>{{ $product->name }}</strong> <br>
                         <span class="text-muted">R$ {{ formatPrice($product->price) }}</span>
                     </a>

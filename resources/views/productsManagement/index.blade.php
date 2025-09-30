@@ -77,7 +77,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <img src="{{ asset('storage/' . $product->photo) }}" alt="Product Image" class="img-fluid mb-3">
+                            <img src="{{ $product->photo ? asset('storage/' . $product->photo) : asset('vendor/adminlte/dist/img/productIcon.png') }}" alt="Product Image" class="img-fluid mb-3">
                             <p><strong>Categoria:</strong> {{ $product->category->name }}</p>
                             <p><strong>Preço:</strong> R$ {{ formatPrice($product->price) }}</p>
                             <p><strong>Quantidade:</strong> {{ $product->quantity }}</p>
@@ -113,7 +113,7 @@
                                 <div class="form-group">
                                     <label for="photo-{{ $product->id }}">Foto</label>
                                     <div class="mt-2 mb-2 text-center">
-                                        <img id="preview-photo-{{ $product->id }}" src="{{ asset('storage/' . $product->photo) }}" alt="Product Image" class="img-fluid mb-2">
+                                        <img id="preview-photo-{{ $product->id }}" src="{{ $product->photo ? asset('storage/' . $product->photo) : asset('vendor/adminlte/dist/img/productIcon.png') }}" alt="Product Image" class="img-fluid mb-2">
                                         <input type="file" id="photo-{{ $product->id }}" name="photo" class="d-none" accept="image/*"
                                             onchange="previewImage(event, {{ $product->id }})">
                                         <label for="photo-{{ $product->id }}" class="btn btn-primary btn-sm mt-2">Escolher nova foto</label>

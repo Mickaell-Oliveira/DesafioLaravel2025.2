@@ -176,4 +176,9 @@ class UserController extends Controller
         return redirect()->route('usersManagement.index')->with('success', 'Email enviado com sucesso para ' . $user->email);
     }
 
+    public function changePassword()
+    {
+        return view('profilePage.changePassword');
+    }
+
 }
