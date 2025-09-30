@@ -40,18 +40,13 @@
                             <td data-label="Categoria">{{ $product->category->name ?? '-' }}</td>
                             <td data-label="Preço">R$ {{ formatPrice($product->price) }}</td>
                             <td data-label="Quantidade">{{ $product->quantity }}</td>
-                            <td data-label="Ações">
+                            <td data-label="Ações" class="td-content">
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-{{ $product->id }}">Visualizar</button>
                                 @auth
                                     @if (auth()->user()->type === 'admin' ||  auth()->user()->id === $product->user_id)
-                                        <!-- Botão Editar -->
+                                        <!-- Botões Editar e Excluir -->
                                     <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-edit-{{ $product->id }}">Editar</button>
-                                    <!-- Modal Deletar -->
-                                        <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
-                                        </form>
+                                    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-delete-{{ $product->id }}">Excluir</button>
                                     @endif
                                 @endauth
 
@@ -160,6 +155,28 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal de excluir -->
+            <div class="modal fade" id="modal-delete-{{ $product->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="{{ route('products.destroy', $product->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <div class="modal-header">
+                            <h5 class="modal-title">Excluir Produto</h5>
+                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja excluir o produto <strong>{{ $product->name }}</strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         @endforeach
 
         <!-- Modal de criar -->
@@ -223,8 +240,8 @@
                 </div>
             </div>
         </div>
-                </tbody>
-            </table>
+            </tbody>
+        </table>
             <div class="mt-3">
                 {{ $products->links('pagination::bootstrap-5') }}
             </div>

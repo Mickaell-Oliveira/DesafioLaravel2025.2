@@ -34,7 +34,7 @@
                             <td data-label="Nome">{{ $admin->name }}</td>
                             <td data-label="Email">{{ $admin->email }}</td>
                             <td data-label="Tipo">{{ $admin->type }}</td>
-                            <td data-label="Ações">
+                            <td data-label="Ações" class="td-content">
                                 <!-- Botão Visualizar -->
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-view-{{ $admin->id }}">Visualizar</button>
                                 @auth
