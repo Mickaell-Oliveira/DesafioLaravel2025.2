@@ -37,7 +37,7 @@
                             <td data-label="Nome">{{ $user->name }}</td>
                             <td data-label="Email">{{ $user->email }}</td>
                             <td data-label="Tipo">{{ $user->type }}</td>
-                            <td data-label="Ações">
+                            <td data-label="Ações" class="td-content">
                                 <!-- Botão Visualizar -->
                                 <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#modal-view-{{ $user->id }}">Visualizar</button>
 
@@ -249,7 +249,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     @empty
                         <tr>
                             <td colspan="5" class="text-center">Nenhum usuário encontrado.</td>
