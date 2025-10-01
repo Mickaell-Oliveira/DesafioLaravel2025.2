@@ -55,35 +55,35 @@
                         <label for="name">Nome</label>
                         <input type="text" name="name" id="name"
                                value="{{ old('name', $user->name) }}"
-                               class="form-control" disabled>
+                               class="form-control" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label for="email">E-mail</label>
                         <input type="email" name="email" id="email"
                                value="{{ old('email', $user->email) }}"
-                               class="form-control" disabled>
+                               class="form-control" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label for="phone">Telefone</label>
                         <input type="text" name="phone" id="phone"
                                value="{{ old('phone', $user->phone) }}"
-                               class="form-control" disabled>
+                               class="form-control" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label for="birth_date">Data de Nascimento</label>
                         <input type="date" name="birth_date" id="birth_date"
                                value="{{ old('birth_date', $user->birth_date?->format('Y-m-d')) }}"
-                               class="form-control" disabled>
+                               class="form-control" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label for="cpf">CPF</label>
                         <input type="text" name="cpf" id="cpf"
                                value="{{ old('cpf', $user->cpf) }}"
-                               class="form-control" disabled>
+                               class="form-control" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -106,42 +106,42 @@
                         <label for="cep">CEP</label>
                         <input type="text" name="cep" id="cep"
                                value="{{ $user->address->cep ?? '' }}"
-                               class="form-control cep-input" disabled>
+                               class="form-control cep-input" disabled required>
                     </div>
 
                     <div class="col-md-2 mb-3">
                         <label for="numero">Número</label>
                         <input type="text" name="numero" id="numero"
                                value="{{ $user->address->numero ?? '' }}"
-                               class="form-control" disabled>
+                               class="form-control" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label for="logradouro">Logradouro</label>
                         <input type="text" name="logradouro" id="logradouro"
                                value="{{ $user->address->logradouro ?? '' }}"
-                               class="form-control logradouro-input" disabled>
+                               class="form-control logradouro-input" disabled required>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="bairro">Bairro</label>
                         <input type="text" name="bairro" id="bairro"
                                value="{{ $user->address->bairro ?? '' }}"
-                               class="form-control bairro-input" disabled>
+                               class="form-control bairro-input" disabled required>
                     </div>
 
                     <div class="col-md-4 mb-3">
                         <label for="cidade">Cidade</label>
                         <input type="text" name="cidade" id="cidade"
                                value="{{ $user->address->cidade ?? '' }}"
-                               class="form-control cidade-input" disabled>
+                               class="form-control cidade-input" disabled required>
                     </div>
 
                     <div class="col-md-2 mb-3">
                         <label for="estado">Estado</label>
                         <input type="text" name="estado" id="estado"
                                value="{{ $user->address->estado ?? '' }}"
-                               class="form-control estado-input" disabled>
+                               class="form-control estado-input" disabled required>
                     </div>
 
                     <div class="col-md-6 mb-3">

@@ -34,7 +34,7 @@ class AdminController extends Controller
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
             'estado' => 'required|string|max:255',
-            'complemento' => 'required|string|max:255',
+            'complemento' => 'nullable|string|max:255',
             'photo' => 'nullable|image|max:2048|mimes:jpeg,png,jpg',
         ]);
 
@@ -73,7 +73,7 @@ class AdminController extends Controller
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
             'estado' => 'required|string|max:255',
-            'complemento' => 'required|string|max:255',
+            'complemento' => 'nullable|string|max:255',
             'photo' => 'nullable|image|max:2048|mimes:jpeg,png,jpg',
         ]);
 
@@ -91,6 +91,8 @@ class AdminController extends Controller
             $path = $request->file('photo')->store('admins', 'public');
             $validated['photo'] = $path;
         }
+
+        $admin->updated_at = now(); // atualiza o timestamp
 
         $admin->update(Arr::except($validated, ['cep','numero','logradouro','bairro','cidade','estado','complemento'])); // atualiza o administrador
 

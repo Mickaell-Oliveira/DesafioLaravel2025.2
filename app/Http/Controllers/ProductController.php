@@ -100,6 +100,7 @@ class ProductController extends Controller
             $data['photo'] = $path; // atualiza o caminho da foto
         }
 
+        $product->updated_at = now(); // atualiza o timestamp
 
         $product->update($data);
         return redirect()->route('productsManagement.index')->with('success', 'Produto atualizado com sucesso!');

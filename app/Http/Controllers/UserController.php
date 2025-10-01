@@ -50,7 +50,7 @@ class UserController extends Controller
             'bairro' => 'required|string|max:100',
             'cidade' => 'required|string|max:100',
             'estado' => 'required|string|max:100',
-            'complemento' => 'required|string|max:255',
+            'complemento' => 'nullable|string|max:255',
         ]);
 
         $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']); // dados do endereço
@@ -67,6 +67,7 @@ class UserController extends Controller
             $path = $request->file('photo')->store('users', 'public'); // armazena a nova foto
             $user->photo = $path; // atualiza o caminho da foto
         }
+        $user->updated_at = now(); // atualiza o timestamp
         $user->save(); // salva as alterações
 
         return redirect()->route('profilePage.index')->with('success', 'Perfil atualizado com sucesso!');
@@ -89,7 +90,7 @@ class UserController extends Controller
             'bairro' => 'required|string|max:100',
             'cidade' => 'required|string|max:100',
             'estado' => 'required|string|max:100',
-            'complemento' => 'required|string|max:255',
+            'complemento' => 'nullable|string|max:255',
         ]);
 
         $addressData = $request->only(['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado', 'complemento']); // dados do endereço
@@ -114,16 +115,16 @@ class UserController extends Controller
         $validated = $request->validate([ // valida os dados do formulário
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
-            'birth_date' => 'nullable|date',
-            'cpf' => 'nullable|string|max:20|unique:users,cpf,' . $user->id,
-            'saldo' => 'nullable|numeric',
-            'cep' => 'nullable|string|max:10',
-            'logradouro' => 'nullable|string|max:255',
-            'numero' => 'nullable|string|max:10',
-            'bairro' => 'nullable|string|max:100',
-            'cidade' => 'nullable|string|max:100',
-            'estado' => 'nullable|string|max:100',
+            'phone' => 'required|string|max:20',
+            'birth_date' => 'required|date',
+            'cpf' => 'required|string|max:20|unique:users,cpf,' . $user->id,
+            'saldo' => 'required|numeric',
+            'cep' => 'required|string|max:10',
+            'logradouro' => 'required|string|max:255',
+            'numero' => 'required|string|max:10',
+            'bairro' => 'required|string|max:100',
+            'cidade' => 'required|string|max:100',
+            'estado' => 'required|string|max:100',
             'complemento' => 'nullable|string|max:255',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
@@ -142,6 +143,8 @@ class UserController extends Controller
             $path = $request->file('photo')->store('users', 'public'); // armazena a nova foto
             $validated['photo'] = $path; // atualiza o caminho da foto
         }
+
+        $user->updated_at = now(); // atualiza o timestamp
 
         $user->update($validated); // atualiza os dados do usuário
 

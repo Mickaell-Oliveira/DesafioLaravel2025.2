@@ -78,8 +78,8 @@
                                         <p><strong>Estado:</strong> {{ $user->address->estado }}</p>
                                         <p><strong>Complemento:</strong> {{ $user->address->complemento }}</p>
                                         <hr>
-                                        <p><strong>Criado em:</strong> {{ $user->created_at }}</p>
-                                        <p><strong>Atualizado em:</strong> {{ $user->updated_at }}</p>
+                                        <p><strong>Criado em:</strong> {{ $user->created_at->format('d/m/Y H:i') }}</p>
+                                        <p><strong>Atualizado em:</strong> {{ $user->updated_at->format('d/m/Y H:i') }}</p>
                                         @if($user->photo)
                                             <p><strong>Foto:</strong></p>
                                             <img src="{{ asset('storage/' . $user->photo) }}" alt="Foto do usuário" class="img-fluid rounded mb-3" width="150">
@@ -114,48 +114,48 @@
 
                                             <div class="form-group">
                                                 <label for="phone-{{ $user->id }}">Telefone</label>
-                                                <input type="text" class="form-control" id="phone-{{ $user->id }}" name="phone" value="{{ $user->phone }}">
+                                                <input type="text" class="form-control" id="phone-{{ $user->id }}" name="phone" value="{{ $user->phone }}" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="cpf-{{ $user->id }}">CPF</label>
-                                                <input type="text" class="form-control" id="cpf-{{ $user->id }}" name="cpf" value="{{ $user->cpf }}">
+                                                <input type="text" class="form-control" id="cpf-{{ $user->id }}" name="cpf" value="{{ $user->cpf }}" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="birth_date-{{ $user->id }}">Data de Nascimento</label>
-                                                <input type="date" class="form-control" id="birth_date-{{ $user->id }}" name="birth_date" value="{{ $user->birth_date->format('Y-m-d') }}">
+                                                <input type="date" class="form-control" id="birth_date-{{ $user->id }}" name="birth_date" value="{{ $user->birth_date->format('Y-m-d') }}" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="saldo-{{ $user->id }}">Saldo</label>
-                                                <input type="number" class="form-control" id="saldo-{{ $user->id }}" name="saldo" value="{{ $user->saldo }}">
+                                                <input type="number" class="form-control" id="saldo-{{ $user->id }}" name="saldo" value="{{ $user->saldo }}" required>
                                             </div>
                                             <hr>
                                             <h5>Endereço</h5>
                                             <div class="form-group">
                                                 <label for="cep-{{ $user->id }}">CEP</label>
-                                                <input type="text" class="form-control cep-input" id="cep-{{ $user->id }}" name="cep" value="{{ $user->address->cep }}">
+                                                <input type="text" class="form-control cep-input" id="cep-{{ $user->id }}" name="cep" value="{{ $user->address->cep }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="numero-{{ $user->id }}">Número</label>
-                                                <input type="text" class="form-control" id="numero-{{ $user->id }}" name="numero" value="{{ $user->address->numero }}">
+                                                <input type="text" class="form-control" id="numero-{{ $user->id }}" name="numero" value="{{ $user->address->numero }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="logradouro-{{ $user->id }}">Logradouro</label>
-                                                <input type="text" class="form-control logradouro-input" id="logradouro-{{ $user->id }}" name="logradouro" value="{{ $user->address->logradouro }}">
+                                                <input type="text" class="form-control logradouro-input" id="logradouro-{{ $user->id }}" name="logradouro" value="{{ $user->address->logradouro }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="bairro-{{ $user->id }}">Bairro</label>
-                                                <input type="text" class="form-control bairro-input" id="bairro-{{ $user->id }}" name="bairro" value="{{ $user->address->bairro }}">
+                                                <input type="text" class="form-control bairro-input" id="bairro-{{ $user->id }}" name="bairro" value="{{ $user->address->bairro }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="cidade-{{ $user->id }}">Cidade</label>
-                                                <input type="text" class="form-control cidade-input" id="cidade-{{ $user->id }}" name="cidade" value="{{ $user->address->cidade }}">
+                                                <input type="text" class="form-control cidade-input" id="cidade-{{ $user->id }}" name="cidade" value="{{ $user->address->cidade }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="estado-{{ $user->id }}">Estado</label>
-                                                <input type="text" class="form-control estado-input" id="estado-{{ $user->id }}" name="estado" value="{{ $user->address->estado }}">
+                                                <input type="text" class="form-control estado-input" id="estado-{{ $user->id }}" name="estado" value="{{ $user->address->estado }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="complemento-{{ $user->id }}">Complemento</label>
@@ -279,18 +279,18 @@
                         <div class="form-group"><label>Nome</label><input type="text" class="form-control" name="name" required></div>
                         <div class="form-group"><label>Email</label><input type="email" class="form-control" name="email" required></div>
                         <div class="form-group"><label>Senha</label><input type="password" class="form-control" name="password" required autocomplete="new-password"></div>
-                        <div class="form-group"><label>Telefone</label><input type="text" class="form-control" name="phone"></div>
-                        <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control" name="birth_date"></div>
-                        <div class="form-group"><label>CPF</label><input type="text" class="form-control" name="cpf"></div>
-                        <div class="form-group"><label>Saldo</label><input type="number" step="0.01" class="form-control" name="saldo"></div>
+                        <div class="form-group"><label>Telefone</label><input type="text" class="form-control" name="phone" required></div>
+                        <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control" name="birth_date" required></div>
+                        <div class="form-group"><label>CPF</label><input type="text" class="form-control" name="cpf" required></div>
+                        <div class="form-group"><label>Saldo</label><input type="number" step="0.01" class="form-control" name="saldo" required></div>
                         <hr>
                         <h5>Endereço</h5>
-                        <div class="form-group"><label>CEP</label><input type="text" class="form-control cep-input" name="cep" id="cep-create"></div>
-                        <div class="form-group"><label>Número</label><input type="text" class="form-control" name="numero" id="numero-create"></div>
-                        <div class="form-group"><label>Logradouro</label><input type="text" class="form-control logradouro-input" name="logradouro" id="logradouro-create"></div>
-                        <div class="form-group"><label>Bairro</label><input type="text" class="form-control bairro-input" name="bairro" id="bairro-create"></div>
-                        <div class="form-group"><label>Cidade</label><input type="text" class="form-control cidade-input" name="cidade" id="cidade-create"></div>
-                        <div class="form-group"><label>Estado</label><input type="text" class="form-control estado-input" name="estado" id="estado-create"></div>
+                        <div class="form-group"><label>CEP</label><input type="text" class="form-control cep-input" name="cep" id="cep-create" required></div>
+                        <div class="form-group"><label>Número</label><input type="text" class="form-control" name="numero" id="numero-create" required></div>
+                        <div class="form-group"><label>Logradouro</label><input type="text" class="form-control logradouro-input" name="logradouro" id="logradouro-create" required></div>
+                        <div class="form-group"><label>Bairro</label><input type="text" class="form-control bairro-input" name="bairro" id="bairro-create" required></div>
+                        <div class="form-group"><label>Cidade</label><input type="text" class="form-control cidade-input" name="cidade" id="cidade-create" required></div>
+                        <div class="form-group"><label>Estado</label><input type="text" class="form-control estado-input" name="estado" id="estado-create" required></div>
                         <div class="form-group"><label>Complemento</label><input type="text" class="form-control complemento-input" name="complemento" id="complemento-create"></div>
                         <div class="form-group">
                             <label for="photo-create">Foto (opcional)</label>

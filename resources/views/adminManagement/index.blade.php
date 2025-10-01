@@ -59,7 +59,7 @@
                                         <p><strong>Nome:</strong> {{ $admin->name }}</p>
                                         <p><strong>Email:</strong> {{ $admin->email }}</p>
                                         <p><strong>Telefone:</strong> {{ $admin->phone }}</p>
-                                        <p><strong>Data de Nascimento:</strong> {{ $admin->birth_date->format('d/m/Y') }}</p>
+                                        <p><strong>Data de Nascimento:</strong> {{ formatDate($admin->birth_date) }}</p>
                                         <p><strong>CPF:</strong> {{ $admin->cpf }}</p>
                                         <p><strong>Tipo:</strong> {{ $admin->type }}</p>
                                         <hr>
@@ -72,8 +72,8 @@
                                         <p><strong>Estado:</strong> {{ $admin->address->estado }}</p>
                                         <p><strong>Complemento:</strong> {{ $admin->address->complemento }}</p>
                                         <hr>
-                                        <p><strong>Criado em:</strong> {{ $admin->created_at->format('d/m/Y') }}</p>
-                                        <p><strong>Atualizado em:</strong> {{ $admin->updated_at->format('d/m/Y') }}</p>
+                                        <p><strong>Criado em:</strong> {{ $admin->created_at->format('d/m/Y H:i') }}</p>
+                                        <p><strong>Atualizado em:</strong> {{ $admin->updated_at->format('d/m/Y H:i') }}</p>
                                         @if($admin->photo)
                                             <p><strong>Foto:</strong></p>
                                             <img src="{{ asset('storage/' . $admin->photo) }}" alt="https://avatar.iran.liara.run/public/17" width="150">
@@ -106,41 +106,41 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="phone-edit-{{ $admin->id }}">Telefone</label>
-                                                <input type="text" class="form-control" name="phone" value="{{ $admin->phone }}" id="phone-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control" name="phone" value="{{ $admin->phone }}" id="phone-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="birth_date-edit-{{ $admin->id }}">Data de Nascimento</label>
-                                                <input type="date" class="form-control" name="birth_date" value="{{ \Carbon\Carbon::parse($admin->birth_date)->format('Y-m-d') }}" id="birth_date-edit-{{ $admin->id }}">
+                                                <input type="date" class="form-control" name="birth_date" value="{{ \Carbon\Carbon::parse($admin->birth_date)->format('Y-m-d') }}" id="birth_date-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="cpf-edit-{{ $admin->id }}">CPF</label>
-                                                <input type="text" class="form-control" name="cpf" value="{{ $admin->cpf }}" id="cpf-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control" name="cpf" value="{{ $admin->cpf }}" id="cpf-edit-{{ $admin->id }}" required>
                                             </div>
                                             <hr>
                                             <h5>Endereço</h5>
                                             <div class="form-group">
                                                 <label for="cep-edit-{{ $admin->id }}">CEP</label>
-                                                <input type="text" class="form-control cep-input" name="cep" value="{{ $admin->address->cep }}" id="cep-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control cep-input" name="cep" value="{{ $admin->address->cep }}" id="cep-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="numero-edit-{{ $admin->id }}">Número</label>
-                                                <input type="text" class="form-control" name="numero" value="{{ $admin->address->numero }}" id="numero-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control" name="numero" value="{{ $admin->address->numero }}" id="numero-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="logradouro-edit-{{ $admin->id }}">Logradouro</label>
-                                                <input type="text" class="form-control logradouro-input" name="logradouro" value="{{ $admin->address->logradouro }}" id="logradouro-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control logradouro-input" name="logradouro" value="{{ $admin->address->logradouro }}" id="logradouro-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="bairro-edit-{{ $admin->id }}">Bairro</label>
-                                                <input type="text" class="form-control bairro-input" name="bairro" value="{{ $admin->address->bairro }}" id="bairro-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control bairro-input" name="bairro" value="{{ $admin->address->bairro }}" id="bairro-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="cidade-edit-{{ $admin->id }}">Cidade</label>
-                                                <input type="text" class="form-control cidade-input" name="cidade" value="{{ $admin->address->cidade }}" id="cidade-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control cidade-input" name="cidade" value="{{ $admin->address->cidade }}" id="cidade-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="estado-edit-{{ $admin->id }}">Estado</label>
-                                                <input type="text" class="form-control estado-input" name="estado" value="{{ $admin->address->estado }}" id="estado-edit-{{ $admin->id }}">
+                                                <input type="text" class="form-control estado-input" name="estado" value="{{ $admin->address->estado }}" id="estado-edit-{{ $admin->id }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="complemento-edit-{{ $admin->id }}">Complemento</label>
@@ -150,7 +150,7 @@
                                                 <label for="photo-edit-{{ $admin->id }}">Foto</label>
                                                 <div class="mt-2 mb-2 text-center">
                                                     <img id="preview-photo-{{ $admin->id }}"
-                                                         src="{{ $admin->photo ? asset('storage/' . $admin->photo) : 'https://avatar.iran.liara.run/public/17' }}"
+                                                         src="{{ $admin->photo ? asset('storage/' . $admin->photo) : asset('vendor/adminlte/dist/img/person.png') }}"
                                                          alt="Foto do administrador"
                                                          class="img-fluid rounded mb-2" width="150">
                                                     <input type="file" id="photo-edit-{{ $admin->id }}" name="photo" class="d-none" accept="image/*"
@@ -222,17 +222,17 @@
                         <div class="form-group"><label>Nome</label><input type="text" class="form-control" name="name" required></div>
                         <div class="form-group"><label>Email</label><input type="email" class="form-control" name="email" required></div>
                         <div class="form-group"><label>Senha</label><input type="password" class="form-control" name="password" required autocomplete="new-password"></div>
-                        <div class="form-group"><label>Telefone</label><input type="text" class="form-control" name="phone"></div>
-                        <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control" name="birth_date"></div>
-                        <div class="form-group"><label>CPF</label><input type="text" class="form-control" name="cpf"></div>
+                        <div class="form-group"><label>Telefone</label><input type="text" class="form-control" name="phone" required></div>
+                        <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control" name="birth_date" required></div>
+                        <div class="form-group"><label>CPF</label><input type="text" class="form-control" name="cpf" required></div>
                         <hr>
                         <h5>Endereço</h5>
-                        <div class="form-group"><label>CEP</label><input type="text" class="form-control cep-input" name="cep" id="cep-create"></div>
-                        <div class="form-group"><label>Número</label><input type="text" class="form-control" name="numero" id="numero-create"></div>
-                        <div class="form-group"><label>Logradouro</label><input type="text" class="form-control logradouro-input" name="logradouro" id="logradouro-create"></div>
-                        <div class="form-group"><label>Bairro</label><input type="text" class="form-control bairro-input" name="bairro" id="bairro-create"></div>
-                        <div class="form-group"><label>Cidade</label><input type="text" class="form-control cidade-input" name="cidade" id="cidade-create"></div>
-                        <div class="form-group"><label>Estado</label><input type="text" class="form-control estado-input" name="estado" id="estado-create"></div>
+                        <div class="form-group"><label>CEP</label><input type="text" class="form-control cep-input" name="cep" id="cep-create" required></div>
+                        <div class="form-group"><label>Número</label><input type="text" class="form-control" name="numero" id="numero-create" required></div>
+                        <div class="form-group"><label>Logradouro</label><input type="text" class="form-control logradouro-input" name="logradouro" id="logradouro-create" required></div>
+                        <div class="form-group"><label>Bairro</label><input type="text" class="form-control bairro-input" name="bairro" id="bairro-create" required></div>
+                        <div class="form-group"><label>Cidade</label><input type="text" class="form-control cidade-input" name="cidade" id="cidade-create" required></div>
+                        <div class="form-group"><label>Estado</label><input type="text" class="form-control estado-input" name="estado" id="estado-create" required></div>
                         <div class="form-group"><label>Complemento</label><input type="text" class="form-control complemento-input" name="complemento" id="complemento-create"></div>
                         <div class="form-group">
                             <label for="photo-create">Foto (opcional)</label>
