@@ -13,9 +13,9 @@
                 @csrf
                 @method('put')
                 <div class="form-group">
-                    <label for="currentPassword">Senha Atual</label>
-                    <input id="currentPassword" name="currentPassword" type="password" class="form-control">
-                    @error('currentPassword', 'updatePassword')
+                    <label for="current_password">Senha Atual</label>
+                    <input id="current_password" name="current_password" type="password" class="form-control">
+                    @error('current_password', 'updatePassword')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -29,9 +29,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="passwordConfirmation">Confirmar Nova Senha</label>
-                    <input id="passwordConfirmation" name="passwordConfirmation" type="password" class="form-control" autocomplete="new-password">
-                    @error('passwordConfirmation', 'updatePassword')
+                    <label for="password_confirmation">Confirmar Nova Senha</label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" autocomplete="new-password">
+                    @error('password_confirmation', 'updatePassword')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
